@@ -1,13 +1,11 @@
 {
-    "compilerOptions": {
-      "target": "es2017",
-      "module": "commonjs",
-      "strict": true,
-      "esModuleInterop": true,
-      "outDir": "./dist",
-      "declaration": true,
-      "declarationDir": "./dist/types"
-    },
-    "include": ["src/**/*"]
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "es2022",
+    "outDir": "dist",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node"
   }
-  
+}
