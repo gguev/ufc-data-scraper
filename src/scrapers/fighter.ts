@@ -1,14 +1,15 @@
 import * as cheerio from 'cheerio'
+import { Fighter } from '../types/fighter'
 import { fetchHtml } from '../utils/fetch'
 
-export async function getFighter(fighterURL) {
+export async function getFighter(fighterURL): Promise<Fighter | null> {
   try {
     const url = fighterURL
 
     const html = await fetchHtml(url)
     const $ = cheerio.load(html)
 
-    const fighterData = {
+    const fighterData: Fighter = {
       url,
       FighterInfo: parseFighterInfo($),
       FighterStats: parseFighterStats($),
@@ -19,16 +20,6 @@ export async function getFighter(fighterURL) {
     console.error(`[FATAL] Error scraping fighter data:`, error)
     return null
   }
-}
-
-export async function getFighterInfo(fighterName) {
-  const data = await getFighter(fighterName)
-  return data?.FighterInfo || null
-}
-
-export async function getFighterStats(fighterName) {
-  const data = await getFighter(fighterName)
-  return data?.FighterStats || null
 }
 
 function parseFighterInfo($) {
@@ -46,11 +37,11 @@ function parseFighterInfo($) {
         .trim()
         .replace(/^"|"$/g, ''),
       Status: getBioText('Status'),
-      Age: getBioText('Age'),
-      Height: getBioText('Height'),
-      Weight: getBioText('Weight'),
-      ArmReach: getBioText('Reach'),
-      LegReach: getBioText('Leg reach'),
+      Age: parseNumber(getBioText('Age')),
+      Height: parseNumber(getBioText('Height')),
+      Weight: parseNumber(getBioText('Weight')),
+      ArmReach: parseNumber(getBioText('Reach')),
+      LegReach: parseNumber(getBioText('Leg reach')),
       FightingStyle: getBioText('Fighting style'),
       Division: $('.hero-profile__division-title').text().trim(),
       PlaceOfBirth: getBioText('Place of Birth'),
@@ -74,11 +65,11 @@ function parseFighterStats($) {
         .trim()
 
     return {
-      Record: $('.hero-profile__division-body').text().trim(),
+      Record: parseRecord($('.hero-profile__division-body').text().trim()),
       WinByMethod: {
-        KO: getStatValue('KO/TKO'),
-        Decision: getStatValue('DEC'),
-        Submission: getStatValue('SUB'),
+        KO: parseValuePercent(getStatValue('KO/TKO')),
+        Decision: parseValuePercent(getStatValue('DEC')),
+        Submission: parseValuePercent(getStatValue('SUB')),
       },
       AvgFightTime: $('.c-stat-compare__label:contains("Average fight time")')
         .prev('.c-stat-compare__number')
@@ -86,50 +77,90 @@ function parseFighterStats($) {
         .text()
         .trim(),
       SigStrikeByPosition: {
-        Standing: getStatValue('Standing'),
-        Clinch: getStatValue('Clinch'),
-        Ground: getStatValue('Ground'),
+        Standing: parseValuePercent(getStatValue('Standing')),
+        Clinch: parseValuePercent(getStatValue('Clinch')),
+        Ground: parseValuePercent(getStatValue('Ground')),
       },
       SigStrikeByTarget: {
-        Head: $('#e-stat-body_x5F__x5F_head_value').text().trim(),
-        Body: $('#e-stat-body_x5F__x5F_body_value').text().trim(),
-        Leg: $('#e-stat-body_x5F__x5F_leg_value').text().trim(),
+        Head: {
+          value: parseNumber($('#e-stat-body_x5F__x5F_head_value').text()),
+          percent: parsePercent($('#e-stat-body_x5F__x5F_head_percent').text()),
+        },
+        Body: {
+          value: parseNumber($('#e-stat-body_x5F__x5F_body_value').text()),
+          percent: parsePercent($('#e-stat-body_x5F__x5F_body_percent').text()),
+        },
+        Leg: {
+          value: parseNumber($('#e-stat-body_x5F__x5F_leg_value').text()),
+          percent: parsePercent($('#e-stat-body_x5F__x5F_leg_percent').text()),
+        },
       },
       StrikingAccuracy: {
-        SigStrikesLanded: $(
-          '.c-overlap__stats-text:contains("Sig. Strikes Landed")'
-        )
-          .next('.c-overlap__stats-value')
-          .first()
-          .text()
-          .trim(),
-        SigStrikesAttempted: $(
-          '.c-overlap__stats-text:contains("Sig. Strikes Attempted")'
-        )
-          .next('.c-overlap__stats-value')
-          .first()
-          .text()
-          .trim(),
+        SigStrikesLanded: parseNumber(
+          $('.c-overlap__stats-text:contains("Sig. Strikes Landed")')
+            .next('.c-overlap__stats-value')
+            .first()
+            .text()
+            .trim()
+        ),
+        SigStrikesAttempted: parseNumber(
+          $('.c-overlap__stats-text:contains("Sig. Strikes Attempted")')
+            .next('.c-overlap__stats-value')
+            .first()
+            .text()
+            .trim()
+        ),
       },
       TakedownAccuracy: {
-        TakedownsLanded: $(
-          '.c-overlap__stats-text:contains("Takedowns Landed")'
-        )
-          .next('.c-overlap__stats-value')
-          .first()
-          .text()
-          .trim(),
-        TakedownsAttempted: $(
-          '.c-overlap__stats-text:contains("Takedowns Attempted")'
-        )
-          .next('.c-overlap__stats-value')
-          .first()
-          .text()
-          .trim(),
+        TakedownsLanded: parseNumber(
+          $('.c-overlap__stats-text:contains("Takedowns Landed")')
+            .next('.c-overlap__stats-value')
+            .first()
+            .text()
+            .trim()
+        ),
+        TakedownsAttempted: parseNumber(
+          $('.c-overlap__stats-text:contains("Takedowns Attempted")')
+            .next('.c-overlap__stats-value')
+            .first()
+            .text()
+            .trim()
+        ),
       },
     }
   } catch (error) {
     console.error(`[PARSER] Error parsing fighter stats:`, error)
     return null
   }
+}
+
+function parseRecord(txt: string): {
+  Wins: number
+  Losses: number
+  Draws: number
+} {
+  const record = txt.match(/(\d+)-(\d+)-(\d+)/)
+  return {
+    Wins: +record[1],
+    Losses: +record[2],
+    Draws: +record[3],
+  }
+}
+
+function parseValuePercent(txt: string): { value: number; percent: number } {
+  const [v, p] = txt.trim().split(' ')
+
+  console.log(p)
+  return {
+    value: Number(v),
+    percent: Number(p.replace(/[%()]/g, '')) / 100,
+  }
+}
+
+function parseNumber(txt: string): number {
+  return Number(txt.trim()) || 0
+}
+
+function parsePercent(txt: string): number {
+  return Number(txt.replace(/[^\d.]/g, '')) / 100
 }

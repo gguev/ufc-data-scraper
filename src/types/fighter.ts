@@ -29,9 +29,18 @@ export interface SigStrikeByPosition {
 }
 
 export interface SigStrikeByTarget {
-  Head: number
-  Body: number
-  Leg: number
+  Head: {
+    value: number
+    percent: number
+  }
+  Body: {
+    value: number
+    percent: number
+  }
+  Leg: {
+    value: number
+    percent: number
+  }
 }
 
 export interface StrikingAccuracy {
