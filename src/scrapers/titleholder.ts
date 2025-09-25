@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio'
 import { fetchHtml } from '../utils/fetch'
+import { parseRecord } from './fighter'
 
 export async function getTitleholders() {
   try {
@@ -24,7 +25,9 @@ export async function getTitleholders() {
         .text()
         .trim()
         .replace(/^"|"$/g, '')
-      const champRecord = $(element).find('.c-ath--record').text().trim()
+      const champRecord = parseRecord(
+        $(element).find('.c-ath--record').text().trim()
+      )
       const champLastFight = $(element)
         .find('.view-fighter-last-fight .view-content .views-row')
         .first()

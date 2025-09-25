@@ -2,7 +2,7 @@ import * as cheerio from 'cheerio'
 import { Fighter } from '../types/fighter'
 import { fetchHtml } from '../utils/fetch'
 
-export async function getFighter(fighterURL): Promise<Fighter | null> {
+export async function getFighter(fighterURL: string): Promise<Fighter | null> {
   try {
     const url = fighterURL
 
@@ -134,7 +134,7 @@ function parseFighterStats($) {
   }
 }
 
-function parseRecord(txt: string): {
+export function parseRecord(txt: string): {
   Wins: number
   Losses: number
   Draws: number
@@ -150,7 +150,6 @@ function parseRecord(txt: string): {
 function parseValuePercent(txt: string): { value: number; percent: number } {
   const [v, p] = txt.trim().split(' ')
 
-  console.log(p)
   return {
     value: Number(v),
     percent: Number(p.replace(/[%()]/g, '')) / 100,

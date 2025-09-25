@@ -3,7 +3,11 @@ export interface Titleholder {
   ChampName: string
   ChampUrl: string
   ChampNickname: string
-  ChampRecord: string
+  ChampRecord: {
+    Wins: number
+    Losses: number
+    Draws: number
+  }
   ChampLastFight: string
 }
 
