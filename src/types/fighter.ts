@@ -1,40 +1,57 @@
-export type UrlString = string
-export type RecordString = string
-export type PercentString = string
-export type TimeString = string
-
 export interface WinByMethod {
-  KO: string
-  Decision: string
-  Submission: string
+  KO: {
+    value: number
+    percent: number
+  }
+  Decision: {
+    value: number
+    percent: number
+  }
+  Submission: {
+    value: number
+    percent: number
+  }
 }
 
 export interface SigStrikeByPosition {
-  Standing: string
-  Clinch: string
-  Ground: string
+  Standing: {
+    value: number
+    percent: number
+  }
+  Clinch: {
+    value: number
+    percent: number
+  }
+  Ground: {
+    value: number
+    percent: number
+  }
 }
 
 export interface SigStrikeByTarget {
-  Head: string
-  Body: string
-  Leg: string
+  Head: number
+  Body: number
+  Leg: number
 }
 
 export interface StrikingAccuracy {
-  SigStrikesLanded: string
-  SigStrikesAttempted: string
+  SigStrikesLanded: number
+  SigStrikesAttempted: number
 }
 
 export interface TakedownAccuracy {
-  TakedownsLanded: string
-  TakedownsAttempted: string
+  TakedownsLanded: number
+  TakedownsAttempted: number
 }
 
 export interface FighterStats {
-  Record: RecordString
+  Record: {
+    Wins: number
+    Losses: number
+    Draws: number
+  }
   WinByMethod: WinByMethod
-  AvgFightTime: TimeString
+  AvgFightTime: string
   SigStrikeByPosition: SigStrikeByPosition
   SigStrikeByTarget: SigStrikeByTarget
   StrikingAccuracy: StrikingAccuracy
@@ -45,21 +62,21 @@ export interface FighterInfo {
   Name: string
   Nickname: string
   Status: 'Active' | 'Retired' | 'Suspended'
-  Age: string
-  Height: string // inches
-  Weight: string // pounds
-  ArmReach: string
-  LegReach: string
+  Age: number
+  Height: number // inches
+  Weight: number // pounds
+  ArmReach: number
+  LegReach: number
   FightingStyle: string
   Division: string
   PlaceOfBirth: string
   TrainingCamp: string
   OctagonDebut: string
-  ImageURL: UrlString
+  ImageURL: string
 }
 
 export interface Fighter {
-  url: UrlString
+  url: string
   FighterInfo: FighterInfo
   FighterStats: FighterStats
 }
