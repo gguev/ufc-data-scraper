@@ -14,7 +14,7 @@ function getRandomUserAgent() {
   return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)]
 }
 
-async function rateLimit() {
+async function rateLimit(): Promise<void> {
   const now = Date.now()
   const timeSinceLast = now - lastRequestTime
 
