@@ -1,3 +1,3 @@
-export { getFighter } from './scrapers/fighter'
-export { getRankings } from './scrapers/rankings'
-export { getTitleholders } from './scrapers/titleholder'
+export { getFighter } from './scrapers/fighter.js'
+export { getRankings } from './scrapers/rankings.js'
+export { getTitleholders } from './scrapers/titleholder.js'

@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio'
-import { fetchHtml } from '../utils/fetch'
+import { fetchHtml } from '../utils/fetch.js'
 
 export async function getRankings() {
   try {

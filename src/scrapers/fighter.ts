@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio'
-import { Fighter } from '../types/fighter'
-import { fetchHtml } from '../utils/fetch'
+import { Fighter } from '../types/fighter.js'
+import { fetchHtml } from '../utils/fetch.js'
 
 export async function getFighter(fighterURL: string): Promise<Fighter | null> {
   try {

@@ -2,7 +2,7 @@
   "name": "ufc-scraper-fork",
   "version": "0.1.6",
   "description": "An API to scrape UFC fighter information, statistics, records, and rankings from UFC.com",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc",

@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio'
-import { fetchHtml } from '../utils/fetch'
-import { parseRecord } from './fighter'
+import { fetchHtml } from '../utils/fetch.js'
+import { parseRecord } from './fighter.js'
 
 export async function getTitleholders() {
   try {
