@@ -29,10 +29,10 @@ export async function getPastEvents(
   } catch (err) {}
 }
 
-function parseEventCards($: cheerio.Root, cheerioSelector: string): Event[] {
+function parseEventCards($: cheerio.Root, cssSelector: string): Event[] {
   const events: Event[] = []
 
-  $(`${cheerioSelector} .c-card-event--result`).each((_, card) => {
+  $(`${cssSelector} .c-card-event--result`).each((_, card) => {
     const $card = $(card)
     const headline = $card
       .find('.c-card-event--result__headline a')
