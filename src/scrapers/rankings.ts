@@ -21,7 +21,6 @@ export async function getRankings() {
             .trim()
           const rank = parseInt(rankText, 10)
 
-          // NEW FIX FOR EDGE CASES //
           const fighterAnchor = $(row).find('.views-field-title a')
           const fighterName = fighterAnchor.text().trim()
           const fighterUrl = new URL(
