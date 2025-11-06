@@ -1,4 +1,6 @@
+export { getEvent } from './scrapers/event.js'
 export { getPastEvents, getUpcomingEvents } from './scrapers/events.js'
 export { getFighter } from './scrapers/fighter.js'
+export { getFighters } from './scrapers/fighters.js'
 export { getRankings } from './scrapers/rankings.js'
 export { getTitleholders } from './scrapers/titleholders.js'
