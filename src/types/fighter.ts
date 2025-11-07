@@ -1,91 +1,74 @@
-export interface WinByMethod {
-  KO: {
-    value: number
-    percent: number
-  }
-  Decision: {
-    value: number
-    percent: number
-  }
-  Submission: {
-    value: number
-    percent: number
-  }
-}
-
-export interface SigStrikeByPosition {
-  Standing: {
-    value: number
-    percent: number
-  }
-  Clinch: {
-    value: number
-    percent: number
-  }
-  Ground: {
-    value: number
-    percent: number
-  }
-}
-
-export interface SigStrikeByTarget {
-  Head: {
-    value: number
-    percent: number
-  }
-  Body: {
-    value: number
-    percent: number
-  }
-  Leg: {
-    value: number
-    percent: number
-  }
-}
-
-export interface StrikingAccuracy {
-  SigStrikesLanded: number
-  SigStrikesAttempted: number
-}
-
-export interface TakedownAccuracy {
-  TakedownsLanded: number
-  TakedownsAttempted: number
-}
-
-export interface FighterStats {
-  Record: {
-    Wins: number
-    Losses: number
-    Draws: number
-  }
-  WinByMethod: WinByMethod
-  AvgFightTime: string
-  SigStrikeByPosition: SigStrikeByPosition
-  SigStrikeByTarget: SigStrikeByTarget
-  StrikingAccuracy: StrikingAccuracy
-  TakedownAccuracy: TakedownAccuracy
+interface ValuePct {
+  value: number
+  percent: number
 }
 
 export interface FighterInfo {
-  Name: string
-  Nickname: string
-  Status: 'Active' | 'Retired' | 'Suspended'
-  Age: number
-  Height: number // inches
-  Weight: number // pounds
-  ArmReach: number
-  LegReach: number
-  FightingStyle: string
-  Division: string
-  PlaceOfBirth: string
-  TrainingCamp: string
-  OctagonDebut: string
-  ImageURL: string
+  name: string
+  nickname: string | null
+  status: 'Active' | 'Retired'
+  age: number
+  height: number
+  weight: number
+  armReach: number
+  legReach: number
+  fightingStyle: string
+  division: string
+  placeOfBirth: string
+  trainingCamp: string
+  octagonDebut: string
+  imageURL: string
+}
+
+export interface FighterStats {
+  record: {
+    wins: number
+    losses: number
+    draws: number
+  }
+  winByMethod: {
+    ko: ValuePct
+    decision: ValuePct
+    submission: ValuePct
+    firstRoundFinishes: number
+  }
+  strikingAccuracy: {
+    sigStrikesLanded: number
+    sigStrikesAttempted: number
+    sigStrikeLandedPercent: number
+  }
+  takedownAccuracy: {
+    takedownsLanded: number
+    takedownsAttempted: number
+    takedownsLandedPercent: number
+  }
+  striking: {
+    sigStrLanded: number
+    sigStrAbsorbed: number
+    sigStrDefense: number
+  }
+  grappling: {
+    takedownAvg: number
+    takedownDefensePercent: number
+    submissionAvg: number
+  }
+  metrics: {
+    knockdownAvg: number
+    avgFightTime: string
+  }
+  sigStrikeByPosition: {
+    standing: ValuePct
+    clinch: ValuePct
+    ground: ValuePct
+  }
+  sigStrikeByTarget: {
+    head: ValuePct
+    body: ValuePct
+    leg: ValuePct
+  }
 }
 
 export interface Fighter {
-  url: string
-  FighterInfo: FighterInfo
-  FighterStats: FighterStats
+  info: FighterInfo
+  stats: FighterStats
 }

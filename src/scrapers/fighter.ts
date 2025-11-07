@@ -2,17 +2,16 @@ import * as cheerio from 'cheerio'
 import { Fighter } from '../types/fighter.js'
 import { fetchHtml } from '../utils/fetch.js'
 
-export async function getFighter(fighterURL: string): Promise<Fighter | null> {
+export async function getFighter(slug: string): Promise<Fighter | null> {
   try {
-    const url = fighterURL
+    const url = `https://www.ufc.com/athlete/${slug}`
 
     const html = await fetchHtml(url)
     const $ = cheerio.load(html)
 
     const fighterData: Fighter = {
-      url,
-      FighterInfo: parseFighterInfo($),
-      FighterStats: parseFighterStats($),
+      info: parseFighterInfo($),
+      stats: parseFighterStats($),
     }
 
     return fighterData
@@ -31,23 +30,23 @@ function parseFighterInfo($) {
         .trim()
 
     return {
-      Name: $('.hero-profile__name').text().trim(),
-      Nickname: $('.hero-profile__nickname')
+      name: $('.hero-profile__name').text().trim(),
+      nickname: $('.hero-profile__nickname')
         .text()
         .trim()
         .replace(/^"|"$/g, ''),
-      Status: getBioText('Status'),
-      Age: parseNumber(getBioText('Age')),
-      Height: parseNumber(getBioText('Height')),
-      Weight: parseNumber(getBioText('Weight')),
-      ArmReach: parseNumber(getBioText('Reach')),
-      LegReach: parseNumber(getBioText('Leg reach')),
-      FightingStyle: getBioText('Fighting style'),
-      Division: $('.hero-profile__division-title').text().trim(),
-      PlaceOfBirth: getBioText('Place of Birth'),
-      TrainingCamp: getBioText('Trains at'),
-      OctagonDebut: getBioText('Octagon Debut'),
-      ImageURL: $('.hero-profile__image').attr('src') || '',
+      status: getBioText('Status'),
+      age: parseNumber(getBioText('Age')),
+      height: parseNumber(getBioText('Height')),
+      weight: parseNumber(getBioText('Weight')),
+      armReach: parseNumber(getBioText('Reach')),
+      legReach: parseNumber(getBioText('Leg reach')),
+      fightingStyle: getBioText('Fighting style'),
+      division: $('.hero-profile__division-title').text().trim(),
+      placeOfBirth: getBioText('Place of Birth'),
+      trainingCamp: getBioText('Trains at'),
+      octagonDebut: getBioText('Octagon Debut'),
+      imageURL: $('.hero-profile__image').attr('src') || '',
     }
   } catch (error) {
     console.error(`[PARSER] Error parsing fighter info:`, error)
@@ -64,68 +63,178 @@ function parseFighterStats($) {
         .text()
         .trim()
 
-    return {
-      Record: parseRecord($('.hero-profile__division-body').text().trim()),
-      WinByMethod: {
-        KO: parseValuePercent(getStatValue('KO/TKO')),
-        Decision: parseValuePercent(getStatValue('DEC')),
-        Submission: parseValuePercent(getStatValue('SUB')),
-      },
-      AvgFightTime: $('.c-stat-compare__label:contains("Average fight time")')
+    const record = parseRecord($('.hero-profile__division-body').text().trim())
+
+    const ko = parseValuePercent(getStatValue('KO/TKO'))
+
+    const decision = parseValuePercent(getStatValue('DEC'))
+
+    const submission = parseValuePercent(getStatValue('SUB'))
+
+    const firstRoundFinishes =
+      Number(
+        $('.athlete-stats__stat')
+          .filter((_, el) =>
+            $(el)
+              .find('.athlete-stats__stat-text')
+              .text()
+              .includes('First Round Finishes')
+          )
+          .find('.athlete-stats__stat-numb')
+          .first()
+          .text()
+          .trim()
+      ) || 0
+
+    const sigStrikesLanded = parseNumber(
+      $('.c-overlap__stats-text:contains("Sig. Strikes Landed")')
+        .next('.c-overlap__stats-value')
+        .first()
+        .text()
+        .trim()
+    )
+
+    const sigStrikesAttempted = parseNumber(
+      $('.c-overlap__stats-text:contains("Sig. Strikes Attempted")')
+        .next('.c-overlap__stats-value')
+        .first()
+        .text()
+        .trim()
+    )
+
+    const sigStrikeLandedPercent = parseFloat(
+      (sigStrikesLanded / sigStrikesAttempted).toFixed(2)
+    )
+
+    const takedownsLanded = parseNumber(
+      $('.c-overlap__stats-text:contains("Takedowns Landed")')
+        .next('.c-overlap__stats-value')
+        .first()
+        .text()
+        .trim()
+    )
+
+    const takedownsAttempted = parseNumber(
+      $('.c-overlap__stats-text:contains("Takedowns Attempted")')
+        .next('.c-overlap__stats-value')
+        .first()
+        .text()
+        .trim()
+    )
+
+    const takedownsLandedPercent = parseFloat(
+      (takedownsLanded / takedownsAttempted).toFixed(2)
+    )
+
+    const sigStrLanded = Number(
+      $('.c-stat-compare__label:contains("Sig. Str. Landed")')
         .prev('.c-stat-compare__number')
         .first()
         .text()
-        .trim(),
-      SigStrikeByPosition: {
-        Standing: parseValuePercent(getStatValue('Standing')),
-        Clinch: parseValuePercent(getStatValue('Clinch')),
-        Ground: parseValuePercent(getStatValue('Ground')),
+        .trim()
+    )
+    const sigStrAbsorbed = Number(
+      $('.c-stat-compare__label:contains("Sig. Str. Absorbed")')
+        .prev('.c-stat-compare__number')
+        .first()
+        .text()
+        .trim()
+    )
+
+    const takedownAvg = Number(
+      $('.c-stat-compare__label:contains("Takedown avg")')
+        .prev('.c-stat-compare__number')
+        .first()
+        .text()
+        .trim()
+    )
+    const submissionAvg = Number(
+      $('.c-stat-compare__label:contains("Submission avg")')
+        .prev('.c-stat-compare__number')
+        .first()
+        .text()
+        .trim()
+    )
+    const sigStrDefense = parsePercent(
+      $('.c-stat-compare__label:contains("Sig. Str. Defense")')
+        .prev('.c-stat-compare__number')
+        .first()
+        .text()
+        .trim()
+    )
+    const takedownDefensePercent = parsePercent(
+      $('.c-stat-compare__label:contains("Takedown Defense")')
+        .prev('.c-stat-compare__number')
+        .first()
+        .text()
+        .trim()
+    )
+    const knockdownAvg = Number(
+      $('.c-stat-compare__label:contains("Knockdown Avg")')
+        .prev('.c-stat-compare__number')
+        .first()
+        .text()
+        .trim()
+    )
+    const avgFightTime = $(
+      '.c-stat-compare__label:contains("Average fight time")'
+    )
+      .prev('.c-stat-compare__number')
+      .first()
+      .text()
+      .trim()
+
+    return {
+      record,
+      winByMethod: {
+        ko,
+        decision,
+        submission,
+        firstRoundFinishes,
       },
-      SigStrikeByTarget: {
-        Head: {
+      strikingAccuracy: {
+        sigStrikesLanded,
+        sigStrikesAttempted,
+        sigStrikeLandedPercent,
+      },
+      takedownAccuracy: {
+        takedownsLanded,
+        takedownsAttempted,
+        takedownsLandedPercent,
+      },
+
+      striking: {
+        sigStrLanded,
+        sigStrAbsorbed,
+        sigStrDefense,
+      },
+      grappling: {
+        takedownAvg,
+        takedownDefensePercent,
+        submissionAvg,
+      },
+      metrics: {
+        knockdownAvg,
+        avgFightTime,
+      },
+      sigStrikeByPosition: {
+        standing: parseValuePercent(getStatValue('Standing')),
+        clinch: parseValuePercent(getStatValue('Clinch')),
+        ground: parseValuePercent(getStatValue('Ground')),
+      },
+      sigStrikeByTarget: {
+        head: {
           value: parseNumber($('#e-stat-body_x5F__x5F_head_value').text()),
           percent: parsePercent($('#e-stat-body_x5F__x5F_head_percent').text()),
         },
-        Body: {
+        body: {
           value: parseNumber($('#e-stat-body_x5F__x5F_body_value').text()),
           percent: parsePercent($('#e-stat-body_x5F__x5F_body_percent').text()),
         },
-        Leg: {
+        leg: {
           value: parseNumber($('#e-stat-body_x5F__x5F_leg_value').text()),
           percent: parsePercent($('#e-stat-body_x5F__x5F_leg_percent').text()),
         },
-      },
-      StrikingAccuracy: {
-        SigStrikesLanded: parseNumber(
-          $('.c-overlap__stats-text:contains("Sig. Strikes Landed")')
-            .next('.c-overlap__stats-value')
-            .first()
-            .text()
-            .trim()
-        ),
-        SigStrikesAttempted: parseNumber(
-          $('.c-overlap__stats-text:contains("Sig. Strikes Attempted")')
-            .next('.c-overlap__stats-value')
-            .first()
-            .text()
-            .trim()
-        ),
-      },
-      TakedownAccuracy: {
-        TakedownsLanded: parseNumber(
-          $('.c-overlap__stats-text:contains("Takedowns Landed")')
-            .next('.c-overlap__stats-value')
-            .first()
-            .text()
-            .trim()
-        ),
-        TakedownsAttempted: parseNumber(
-          $('.c-overlap__stats-text:contains("Takedowns Attempted")')
-            .next('.c-overlap__stats-value')
-            .first()
-            .text()
-            .trim()
-        ),
       },
     }
   } catch (error) {
@@ -135,15 +244,15 @@ function parseFighterStats($) {
 }
 
 export function parseRecord(txt: string): {
-  Wins: number
-  Losses: number
-  Draws: number
+  wins: number
+  losses: number
+  draws: number
 } {
   const record = txt.match(/(\d+)-(\d+)-(\d+)/)
   return {
-    Wins: +record[1],
-    Losses: +record[2],
-    Draws: +record[3],
+    wins: +record[1],
+    losses: +record[2],
+    draws: +record[3],
   }
 }
 
