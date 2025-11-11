@@ -9,15 +9,19 @@ export async function getEvent(slug: string): Promise<Card | null> {
     const html = await fetchHtml(url)
     const $ = cheerio.load(html)
 
-    return parseEvent($)
+    const events = await parseEvent($)
+
+    return [...events]
   } catch (err) {}
 }
 
-function parseEvent($: cheerio.Root): Card {
-  const fights = []
+async function parseEvent($: cheerio.Root): Promise<Card> {
+  const fightRows = $('.c-listing-fight').toArray()
 
-  $('.c-listing-fight').each((_, row) => {
+  const fights = fightRows.map((row) => {
     const $row = $(row)
+
+    const fightId = $row.attr('data-fmid') ?? null
 
     const boutType = $row
       .find('.c-listing-fight__class-text')
@@ -61,13 +65,14 @@ function parseEvent($: cheerio.Root): Card {
       .map((_, el) => $(el).text().trim())
       .get()
 
-    fights.push({
+    return {
+      fightId,
       boutType,
       red,
       blue,
       result: method ? { method, round, time } : null,
       awards: awards.length ? awards : null,
-    })
+    }
   })
 
   return fights
