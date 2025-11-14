@@ -12,7 +12,9 @@ export async function getEvent(slug: string): Promise<Card | null> {
     const events = await parseEvent($)
 
     return [...events]
-  } catch (err) {}
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 async function parseEvent($: cheerio.Root): Promise<Card> {
@@ -21,7 +23,7 @@ async function parseEvent($: cheerio.Root): Promise<Card> {
   const fights = fightRows.map((row) => {
     const $row = $(row)
 
-    const fightId = $row.attr('data-fmid') ?? null
+    const fightId = Number($row.attr('data-fmid')) ?? null
 
     const boutType = $row
       .find('.c-listing-fight__class-text')

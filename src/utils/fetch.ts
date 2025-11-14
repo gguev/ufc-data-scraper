@@ -35,7 +35,7 @@ export async function fetchHtml(url: string, retries = 3): Promise<string> {
       lastRequestTime = Date.now()
       return html
     } catch (error) {
-      console.error(`[ERROR] Puppeteer failed:`, (error as Error).message)
+      console.error(`[ERROR] Puppeteer failed:`, error.message)
 
       if (attempt < retries) {
         const backoffTime = Math.pow(2, attempt) * 1000
