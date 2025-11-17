@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 
-export async function getFight(slug: string, fightId: string) {
+export async function getFight(slug: string, fightId: number) {
   const URL = `https://www.ufc.com/event/${slug}#${fightId}`
 
   try {
