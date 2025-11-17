@@ -3,6 +3,7 @@
     "target": "esnext",
     "module": "nodenext",
     "outDir": "dist",
+    "declaration": true,
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,

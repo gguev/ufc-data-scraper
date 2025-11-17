@@ -1,36 +1,50 @@
 {
-  "name": "ufc-scraper-fork",
-  "version": "0.1.6",
-  "description": "An API to scrape UFC fighter information, statistics, records, and rankings from UFC.com",
+  "name": "fightpuppet",
+  "version": "1.0.0",
+  "description": "A UFC scraper that uses Puppeteer and Cheerio to extract fighter information, statistics, records, rankings, and fight data from UFC.com",
   "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "test": "node test.js"
+    "prepublishOnly": "npm run build",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Vladimir-G4/UFC-Scraper.git"
+    "url": "git+https://github.com/gguev/fightpuppet.git"
   },
   "keywords": [
-    "UFC",
-    "UFC API",
-    "UFC Scraper",
-    "UFC Stats",
-    "UFC Records",
-    "MMA Stats"
+    "ufc",
+    "mma",
+    "ufc-scraper",
+    "puppeteer",
+    "scraping",
+    "ufc-stats",
+    "ufc-rankings",
+    "ufc-fighters",
+    "mixed-martial-arts",
+    "sports-api",
+    "data-scraping"
   ],
-  "author": "Vladimir Gutierrez",
+  "author": "Guillermo Guevara",
   "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "devDependencies": {
     "@types/cheerio": "^0.22.35",
     "typescript": "^5.9.2"
   },
   "bugs": {
-    "url": "https://github.com/Vladimir-G4/UFC-Scraper/issues"
+    "url": "https://github.com/gguev/fightpuppet/issues"
   },
-  "homepage": "https://github.com/Vladimir-G4/UFC-Scraper#readme",
+  "homepage": "https://github.com/gguev/fightpuppet#readme",
   "dependencies": {
     "cheerio": "^1.1.2",
     "puppeteer": "^24.29.1",
