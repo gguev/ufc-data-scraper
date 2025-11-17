@@ -1,10 +1,10 @@
 import * as cheerio from 'cheerio'
-import { FighterProfile } from '../types/fighters.js'
+import { FighterSummary } from '../types/fighters.js'
 import { fetchHtml } from '../utils/fetch.js'
 
 export async function getFighters(
   pageNumber: number = 0
-): Promise<FighterProfile[] | null> {
+): Promise<FighterSummary[] | null> {
   try {
     const url = `https://www.ufc.com/athletes/all?page=${pageNumber}`
 
@@ -15,7 +15,7 @@ export async function getFighters(
   } catch (error) {}
 }
 
-function parseFighters($: cheerio.Root): FighterProfile[] {
+function parseFighters($: cheerio.Root): FighterSummary[] {
   const fighters = []
 
   $('.c-listing-athlete-flipcard__inner').each((_, element) => {

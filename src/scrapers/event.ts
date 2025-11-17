@@ -1,8 +1,8 @@
 import * as cheerio from 'cheerio'
-import { Card, Corner } from '../types/event.js'
+import { FightCard, Corner } from '../types/event.js'
 import { fetchHtml } from '../utils/fetch.js'
 
-export async function getEvent(slug: string): Promise<Card | null> {
+export async function getEvent(slug: string): Promise<FightCard | null> {
   try {
     const url = `https://www.ufc.com/event/${slug}`
 
@@ -17,7 +17,7 @@ export async function getEvent(slug: string): Promise<Card | null> {
   }
 }
 
-async function parseEvent($: cheerio.Root): Promise<Card> {
+async function parseEvent($: cheerio.Root): Promise<FightCard> {
   const fightRows = $('.c-listing-fight').toArray()
 
   const fights = fightRows.map((row) => {

@@ -1,3 +1,5 @@
+import { FightRecord } from './common.js'
+
 interface ValuePct {
   value: number
   percent: number
@@ -21,11 +23,7 @@ export interface FighterInfo {
 }
 
 export interface FighterStats {
-  record: {
-    wins: number
-    losses: number
-    draws: number
-  }
+  record: FightRecord
   winByMethod: {
     ko: ValuePct
     decision: ValuePct
@@ -33,9 +31,9 @@ export interface FighterStats {
     firstRoundFinishes: number
   }
   strikingAccuracy: {
-    sigStrikesLanded: number
-    sigStrikesAttempted: number
-    sigStrikeLandedPercent: number
+    significantStrikesLanded: number
+    significantStrikesAttempted: number
+    significantStrikeLandedPercent: number
   }
   takedownAccuracy: {
     takedownsLanded: number
@@ -43,25 +41,25 @@ export interface FighterStats {
     takedownsLandedPercent: number
   }
   striking: {
-    sigStrLanded: number
-    sigStrAbsorbed: number
-    sigStrDefense: number
+    significantStrikesLanded: number
+    significantStrikesAbsorbed: number
+    significantStrikesDefense: number
   }
   grappling: {
-    takedownAvg: number
+    takedownAverage: number
     takedownDefensePercent: number
-    submissionAvg: number
+    submissionAverage: number
   }
   metrics: {
-    knockdownAvg: number
-    avgFightTime: string
+    knockdownAverage: number
+    averageFightTime: string
   }
-  sigStrikeByPosition: {
+  significantStrikeByPosition: {
     standing: ValuePct
     clinch: ValuePct
     ground: ValuePct
   }
-  sigStrikeByTarget: {
+  significantStrikeByTarget: {
     head: ValuePct
     body: ValuePct
     leg: ValuePct

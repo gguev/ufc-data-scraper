@@ -1,10 +1,6 @@
-export interface FightRecord {
-  wins: number
-  losses: number
-  draws: number
-}
+import { FightRecord } from './common.js'
 
-export interface FighterProfile {
+export interface FighterSummary {
   nickname: string | null
   name: string
   weight: string

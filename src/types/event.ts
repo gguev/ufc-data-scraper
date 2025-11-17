@@ -1,3 +1,5 @@
+import { FightResult } from './common.js'
+
 export interface Corner {
   name: string
   rank: 'C' | number | null
@@ -5,12 +7,6 @@ export interface Corner {
   country: string | null
   outcome: 'no contest' | 'draw' | 'win' | 'loss' | null
   slug: string | null
-}
-
-export interface FightResult {
-  method: string
-  round: number
-  time: string
 }
 
 export interface Fight {
@@ -21,4 +17,4 @@ export interface Fight {
   awards: string[] | null
 }
 
-export type Card = Fight[]
+export type FightCard = Fight[]

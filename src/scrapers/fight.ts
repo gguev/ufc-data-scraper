@@ -17,10 +17,8 @@ export async function getFight(slug: string, fightId: number) {
 
     const frames = await page.$$eval(
       '.details-content__iframe-wrapper iframe',
-      () =>
-        Array.from(
-          document.querySelectorAll('.details-content__iframe-wrapper iframe')
-        ).map((f) => f.src)
+      (frames) =>
+        Array.from(frames).map((f: HTMLIFrameElement) => f.src)
     )
 
     for (const src of frames) {
