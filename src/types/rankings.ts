@@ -1,4 +1,5 @@
 export interface RankedFighter {
+  rank: number
   name: string
   url: string
 }
