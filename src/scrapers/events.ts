@@ -13,7 +13,9 @@ export async function getUpcomingEvents(): Promise<Event[] | null> {
     const $ = cheerio.load(html)
 
     return parseEventCards($, UPCOMING_EVENTS_SELECTOR)
-  } catch (err) {}
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 export async function getPastEvents(

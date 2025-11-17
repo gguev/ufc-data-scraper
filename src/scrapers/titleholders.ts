@@ -35,13 +35,12 @@ export async function getTitleholders() {
         .trim()
 
       if (division) {
-        titleholdersDict[division] = {
-          Weight: weight,
-          ChampName: champName,
-          ChampUrl: champUrl,
-          ChampNickname: champNickname,
-          ChampRecord: champRecord,
-          ChampLastFight: champLastFight,
+        titleholdersDict[division.toLowerCase()] = {
+          name: champName,
+          nickname: champNickname,
+          slug: champUrl.split('/').filter(Boolean).pop() || '',
+          record: champRecord,
+          lastFight: champLastFight,
         }
       }
     })

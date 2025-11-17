@@ -1,14 +1,13 @@
 export interface Titleholder {
-  Weight: string
-  ChampName: string
-  ChampUrl: string
-  ChampNickname: string
-  ChampRecord: {
-    Wins: number
-    Losses: number
-    Draws: number
+  name: string
+  nickname: string
+  slug: string
+  record: {
+    wins: number
+    losses: number
+    draws: number
   }
-  ChampLastFight: string
+  lastFight: string
 }
 
 export type Titleholders = Record<string, Titleholder>

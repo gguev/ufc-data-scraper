@@ -27,11 +27,12 @@ export async function getRankings() {
             fighterAnchor.attr('href'),
             'https://www.ufc.com'
           ).href
+          const fighterSlug = fighterUrl.split('/').filter(Boolean).pop() || ''
 
           if (!isNaN(rank)) {
             rankings[rank] = {
               name: fighterName,
-              url: fighterUrl,
+              slug: fighterSlug,
             }
           }
         })

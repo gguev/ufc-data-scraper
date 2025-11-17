@@ -210,9 +210,9 @@ export async function getFight(slug: string, fightId: string) {
         const mapFight = (c) => ({
           totalStrikes: c[0],
           takedowns: c[1],
-          subAttempts: c[2],
+          submissionAttempts: c[2],
           reversals: c[3],
-          sigStrikes: c[4],
+          significantStrikes: c[4],
           knockdowns: c[5],
         })
         const mapPos = (c) => ({
@@ -231,13 +231,13 @@ export async function getFight(slug: string, fightId: string) {
         return {
           red: {
             fightOverview: wrap(redFight, mapFight),
-            sigStrikesByTarget: wrap(redTarget, (t) => t),
-            sigStrikesByPosition: wrap(redPos, mapPos),
+            significantStrikesByTarget: wrap(redTarget, (t) => t),
+            significantStrikesByPosition: wrap(redPos, mapPos),
           },
           blue: {
             fightOverview: wrap(blueFight, mapFight),
-            sigStrikesByTarget: wrap(blueTarget, (t) => t),
-            sigStrikesByPosition: wrap(bluePos, mapPos),
+            significantStrikesByTarget: wrap(blueTarget, (t) => t),
+            significantStrikesByPosition: wrap(bluePos, mapPos),
           },
         }
       }

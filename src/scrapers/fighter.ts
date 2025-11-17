@@ -193,9 +193,9 @@ function parseFighterStats($) {
         firstRoundFinishes,
       },
       strikingAccuracy: {
-        sigStrikesLanded,
-        sigStrikesAttempted,
-        sigStrikeLandedPercent,
+        significantStrikesLanded: sigStrikesLanded,
+        significantStrikesAttempted: sigStrikesAttempted,
+        significantStrikeLandedPercent: sigStrikeLandedPercent,
       },
       takedownAccuracy: {
         takedownsLanded,
@@ -204,25 +204,25 @@ function parseFighterStats($) {
       },
 
       striking: {
-        sigStrLanded,
-        sigStrAbsorbed,
-        sigStrDefense,
+        significantStrikesLanded: sigStrLanded,
+        significantStrikesAbsorbed: sigStrAbsorbed,
+        significantStrikesDefense: sigStrDefense,
       },
       grappling: {
-        takedownAvg,
+        takedownAverage: takedownAvg,
         takedownDefensePercent,
-        submissionAvg,
+        submissionAverage: submissionAvg,
       },
       metrics: {
-        knockdownAvg,
-        avgFightTime,
+        knockdownAverage: knockdownAvg,
+        averageFightTime: avgFightTime,
       },
-      sigStrikeByPosition: {
+      significantStrikeByPosition: {
         standing: parseValuePercent(getStatValue('Standing')),
         clinch: parseValuePercent(getStatValue('Clinch')),
         ground: parseValuePercent(getStatValue('Ground')),
       },
-      sigStrikeByTarget: {
+      significantStrikeByTarget: {
         head: {
           value: parseNumber($('#e-stat-body_x5F__x5F_head_value').text()),
           percent: parsePercent($('#e-stat-body_x5F__x5F_head_percent').text()),
