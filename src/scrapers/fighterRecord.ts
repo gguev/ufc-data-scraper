@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio'
+import { DECIMAL_RADIX } from '../constants/index.js'
 import { fetchHtml } from '../utils/fetch.js'
 import { slugToEventName } from './events.js'
-import { DECIMAL_RADIX } from '../constants/index.js'
 
 export async function getFighterRecord(
   fighterSlug: string,

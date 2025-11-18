@@ -1,5 +1,9 @@
 import puppeteer from 'puppeteer'
-import { MS_TO_S, BROWSER_TIMEOUT, EXPONENTIAL_BACKOFF_BASE } from '../constants/index.js'
+import {
+  BROWSER_TIMEOUT,
+  EXPONENTIAL_BACKOFF_BASE,
+  MS_TO_S,
+} from '../constants/index.js'
 
 const REQUEST_DELAY = 15000 // 15 seconds - UFC site delay
 const USER_AGENTS = [
@@ -39,7 +43,8 @@ export async function fetchHtml(url: string, retries = 3): Promise<string> {
       console.error(`[ERROR] Puppeteer failed:`, error.message)
 
       if (attempt < retries) {
-        const backoffTime = Math.pow(EXPONENTIAL_BACKOFF_BASE, attempt) * MS_TO_S
+        const backoffTime =
+          Math.pow(EXPONENTIAL_BACKOFF_BASE, attempt) * MS_TO_S
         console.log(`[RETRY] Retrying in ${backoffTime / MS_TO_S}s`)
         await new Promise((resolve) => setTimeout(resolve, backoffTime))
       }

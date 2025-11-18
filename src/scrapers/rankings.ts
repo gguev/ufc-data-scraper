@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio'
-import { fetchHtml } from '../utils/fetch.js'
 import { DECIMAL_RADIX } from '../constants/index.js'
+import { fetchHtml } from '../utils/fetch.js'
 
 // Map of exact header texts to normalized keys
 const divisionNameMap: Record<string, string> = {
@@ -17,7 +17,7 @@ const divisionNameMap: Record<string, string> = {
   "women's strawweight": 'womensStrawweight',
   "women's flyweight": 'womensFlyweight',
   "women's bantamweight": 'womensBantamweight',
-  "women's featherweight": 'womensFeatherweight'
+  "women's featherweight": 'womensFeatherweight',
 }
 
 function normalizeDivisionName(headerRaw: string): string {
@@ -26,7 +26,7 @@ function normalizeDivisionName(headerRaw: string): string {
   if (normalized) {
     return normalized
   }
-  
+
   // Fallback to basic camelCase conversion for any unknown divisions
   return headerRaw
     .trim()

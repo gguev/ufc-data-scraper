@@ -1,5 +1,10 @@
 import puppeteer from 'puppeteer'
-import { PERCENT_MULTIPLIER, DECIMAL_RADIX, FIGHT_STATS_CHUNK_SIZE, POSITION_STATS_CHUNK_SIZE } from '../constants/index.js'
+import {
+  DECIMAL_RADIX,
+  FIGHT_STATS_CHUNK_SIZE,
+  PERCENT_MULTIPLIER,
+  POSITION_STATS_CHUNK_SIZE,
+} from '../constants/index.js'
 
 export async function getFight(slug: string, fightId: number) {
   const URL = `https://www.ufc.com/event/${slug}#${fightId}`
@@ -18,8 +23,7 @@ export async function getFight(slug: string, fightId: number) {
 
     const frames = await page.$$eval(
       '.details-content__iframe-wrapper iframe',
-      (frames) =>
-        Array.from(frames).map((f: HTMLIFrameElement) => f.src)
+      (frames) => Array.from(frames).map((f: HTMLIFrameElement) => f.src)
     )
 
     for (const src of frames) {
@@ -163,7 +167,9 @@ export async function getFight(slug: string, fightId: number) {
             },
           }))
 
-        const totalRounds = data.redFightOverview.length / (FIGHT_STATS_CHUNK_SIZE + POSITION_STATS_CHUNK_SIZE)
+        const totalRounds =
+          data.redFightOverview.length /
+          (FIGHT_STATS_CHUNK_SIZE + POSITION_STATS_CHUNK_SIZE)
 
         const zipRed = zipFight(
           data.redFightOverview,
@@ -177,16 +183,28 @@ export async function getFight(slug: string, fightId: number) {
         )
 
         const fightEnd = totalRounds * FIGHT_STATS_CHUNK_SIZE
-        const redFight = chunk(FIGHT_STATS_CHUNK_SIZE, zipRed.slice(0, fightEnd))
-        const blueFight = chunk(FIGHT_STATS_CHUNK_SIZE, zipBlue.slice(0, fightEnd))
+        const redFight = chunk(
+          FIGHT_STATS_CHUNK_SIZE,
+          zipRed.slice(0, fightEnd)
+        )
+        const blueFight = chunk(
+          FIGHT_STATS_CHUNK_SIZE,
+          zipBlue.slice(0, fightEnd)
+        )
 
         const redPos = chunk(
           POSITION_STATS_CHUNK_SIZE,
-          zipRed.slice(fightEnd, fightEnd + totalRounds * POSITION_STATS_CHUNK_SIZE)
+          zipRed.slice(
+            fightEnd,
+            fightEnd + totalRounds * POSITION_STATS_CHUNK_SIZE
+          )
         )
         const bluePos = chunk(
           POSITION_STATS_CHUNK_SIZE,
-          zipBlue.slice(fightEnd, fightEnd + totalRounds * POSITION_STATS_CHUNK_SIZE)
+          zipBlue.slice(
+            fightEnd,
+            fightEnd + totalRounds * POSITION_STATS_CHUNK_SIZE
+          )
         )
 
         const redTarget = zipTarget(

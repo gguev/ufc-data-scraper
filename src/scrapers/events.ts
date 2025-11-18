@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio'
+import { UNIX_TO_MS } from '../constants/index.js'
 import { Event } from '../types/events.js'
 import { fetchHtml } from '../utils/fetch.js'
-import { UNIX_TO_MS } from '../constants/index.js'
 
 const UPCOMING_EVENTS_SELECTOR = '#events-list-upcoming'
 const PAST_EVENTS_SELECTOR = '#events-list-past'

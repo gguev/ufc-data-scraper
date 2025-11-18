@@ -1,7 +1,11 @@
 import * as cheerio from 'cheerio'
+import {
+  DECIMAL_RADIX,
+  PERCENT_MULTIPLIER,
+  TO_FIXED_DECIMALS,
+} from '../constants/index.js'
 import { Fighter } from '../types/fighter.js'
 import { fetchHtml } from '../utils/fetch.js'
-import { PERCENT_MULTIPLIER, DECIMAL_RADIX, TO_FIXED_DECIMALS } from '../constants/index.js'
 
 export async function getFighter(slug: string): Promise<Fighter | null> {
   try {

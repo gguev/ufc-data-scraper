@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio'
-import { FightCard, Corner } from '../types/event.js'
+import { Corner, FightCard } from '../types/event.js'
 import { fetchHtml } from '../utils/fetch.js'
 
 export async function getEvent(slug: string): Promise<FightCard | null> {
