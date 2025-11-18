@@ -80,7 +80,7 @@ function parseEventCards($: cheerio.Root, cssSelector: string): Event[] {
   return events
 }
 
-function slugToEventName(slug: string): string {
+export function slugToEventName(slug: string): string {
   const s = slug.replace(/^\/|\/$/g, '')
   if (s.startsWith('ufc-') && /^\d+$/.test(s.slice(4))) {
     return `UFC ${s.slice(4)}`

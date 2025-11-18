@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio'
 import { fetchHtml } from '../utils/fetch.js'
+import { slugToEventName } from './events.js'
 
 export async function getFighterRecord(
   fighterSlug: string,
@@ -93,17 +94,4 @@ function parseFighterRecord($: cheerio.Root) {
   )
 
   return fights
-}
-
-function slugToEventName(slug: string): string {
-  const s = slug.replace(/^\/|\/$/g, '')
-  if (s.startsWith('ufc-') && /^\d+$/.test(s.slice(4))) {
-    return `UFC ${s.slice(4)}`
-  }
-  if (s.startsWith('ufc-fight-night')) return 'UFC Fight Night'
-
-  return s
-    .split('-')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ')
 }

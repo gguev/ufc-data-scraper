@@ -1,7 +1,7 @@
 {
   "name": "fightpuppet",
   "version": "1.0.0",
-  "description": "A UFC scraper that uses Puppeteer and Cheerio to extract fighter information, statistics, records, rankings, and fight data from UFC.com",
+  "description": "A scraper that uses Puppeteer and Cheerio to extract structured data from UFC.com.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "type": "module",
