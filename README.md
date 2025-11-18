@@ -1,6 +1,6 @@
 # FightPuppet
 
-A UFC scraper that uses Puppeteer and Cheerio to extract fighter information, statistics, records, rankings, and fight data from UFC.com.
+A TypeScript scraper that uses Puppeteer and Cheerio to extract data from UFC.com.
 
 ## Usage
 
