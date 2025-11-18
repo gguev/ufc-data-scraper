@@ -1,8 +1,344 @@
 # FightPuppet
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/UFC_Logo.png" width="250"/>
+A UFC scraper that uses Puppeteer and Cheerio to extract fighter information, statistics, records, rankings, and fight data from UFC.com.
 
-A UFC scraper built with Puppeteer that extracts fighter information, statistics, records, rankings, and fight data from UFC.com.
+## Usage
+
+```typescript
+import { getEvent, getFighter, getRankings } from 'fightpuppet'
+
+// Get UFC event fights
+const event = await getEvent('ufc-321')
+console.log(event[0].red.name) // "Tom Aspinall"
+
+// Get fighter details
+const fighter = await getFighter('petr-yan')
+console.log(fighter.info.name) // "Petr Yan"
+console.log(fighter.stats.record) // { wins: 19, losses: 5, draws: 0 }
+
+// Get current rankings
+const rankings = await getRankings()
+console.log(rankings.mensPoundForPound[0]) // { rank: 1, name: "Islam Makhachev", slug: "islam-makhachev" }
+```
+
+## API
+
+### Functions
+
+#### getEvent(slug: string): Promise<FightCard | null>
+
+Retrieves complete fight card for a specific UFC event using an event's slug.
+
+```typescript
+// Returns:
+;[
+  {
+    fightId: 12277,
+    boutType: 'Heavyweight Title Bout',
+    red: {
+      name: 'Tom Aspinall',
+      rank: 'C',
+      odds: '-355',
+      country: 'England',
+      outcome: 'no contest',
+      slug: 'tom-aspinall',
+    },
+    blue: {
+      name: 'Ciryl Gane',
+      rank: 1,
+      odds: '+280',
+      country: 'France',
+      outcome: 'no contest',
+      slug: 'ciryl-gane',
+    },
+    result: { method: 'Could Not Continue', round: 1, time: '4:35' },
+    awards: null,
+  },
+  // ... more fights
+]
+```
+
+#### getPastEvents(pageNumber?: number): Promise<Event[] | null>
+
+Retrieves a single page of past UFC events.
+
+```typescript
+// Returns:
+;[
+  {
+    eventName: 'UFC 322',
+    headline: 'Della Maddalena vs Makhachev',
+    mainCard: { dateTime: '2025-11-16T03:00:00.000Z', unix: 1763262000 },
+    prelim: { dateTime: '2025-11-16T01:00:00.000Z', unix: 1763254800 },
+    slug: 'ufc-322',
+    location: {
+      venue: 'Madison Square Garden',
+      locality: 'New York',
+      administrativeArea: 'NY',
+      country: 'United States',
+    },
+  },
+  // ... more events
+]
+```
+
+#### getUpcomingEvents(): Promise<Event[] | null>
+
+Retrieves all upcoming UFC events.
+
+```typescript
+// Returns:
+;[
+  {
+    eventName: 'UFC Fight Night',
+    headline: 'Tsarukyan vs Hooker',
+    mainCard: { dateTime: '2025-11-22T18:00:00.000Z', unix: 1763834400 },
+    prelim: { dateTime: '2025-11-22T15:00:00.000Z', unix: 1763823600 },
+    slug: 'ufc-fight-night-november-22-2025',
+    location: {
+      venue: 'ABHA Arena',
+      locality: 'Doha',
+      administrativeArea: null,
+      country: 'Qatar',
+    },
+  },
+  // ... more events
+]
+```
+
+#### getFight(slug: string, fightId: number): Promise<any | null>
+
+Retrieves detailed statistics of a single fight.
+
+```typescript
+// Returns:
+{
+  red: {
+    fightOverview: {
+      fullFight: {
+        totalStrikes: { landed: 89, percent: 0.29, attempted: null },
+        takedowns: { landed: 0, percent: null, attempted: null },
+        submissionAttempts: { landed: 0, percent: null, attempted: null },
+        reversals: { landed: 0, percent: null, attempted: null },
+        significantStrikes: { landed: 87, percent: null, attempted: null },
+        knockdowns: { landed: 0, percent: null, attempted: null }
+      },
+      rounds: [
+        {
+          round: 1,
+          totalStrikes: { landed: 14, percent: 0.21, attempted: null },
+          takedowns: { landed: 0, percent: null, attempted: null },
+          submissionAttempts: { landed: 0, percent: null, attempted: null },
+          reversals: { landed: 0, percent: null, attempted: null },
+          significantStrikes: { landed: 14, percent: null, attempted: null },
+          knockdowns: { landed: 0, percent: null, attempted: null }
+        },
+        // ... more rounds
+      ]
+    },
+    significantStrikesByTarget: {
+      fullFight: {
+        head: { landed: 43, percent: 0.49 },
+        body: { landed: 26, percent: 0.3 },
+        leg: { landed: 18, percent: 0.21 }
+      },
+      rounds: [
+        {
+          round: 1,
+          head: { landed: 8, percent: 0.57 },
+          body: { landed: 4, percent: 0.29 },
+          leg: { landed: 2, percent: 0.14 }
+        },
+        // ... more rounds
+      ]
+    },
+    significantStrikesByPosition: {
+      fullFight: {
+        distance: { landed: 87, percent: 0.29, attempted: null },
+        clinch: { landed: 0, percent: null, attempted: null },
+        ground: { landed: 0, percent: null, attempted: null }
+      },
+      rounds: [
+        {
+          round: 1,
+          distance: { landed: 14, percent: 0.21, attempted: null },
+          clinch: { landed: 0, percent: null, attempted: null },
+          ground: { landed: 0, percent: null, attempted: null }
+        },
+        // ... more rounds
+      ]
+    }
+    // ... more detailed fight statistics
+  },
+  // ... blue corner and other data
+}
+```
+
+#### getFighter(slug: string): Promise<Fighter | null>
+
+Retrieves fighter information and statistics.
+
+```typescript
+// Returns:
+{
+  info: {
+    name: 'Petr Yan',
+    nickname: 'No Mercy',
+    status: 'Active',
+    age: 32,
+    height: 67.5,
+    weight: 136,
+    armReach: 67,
+    legReach: 38,
+    fightingStyle: 'Boxer',
+    division: 'Bantamweight Division',
+    placeOfBirth: 'Krasnoyarsk Krai, Russia',
+    trainingCamp: 'Team Yan',
+    octagonDebut: 'Jun. 23, 2018',
+    imageURL: 'https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-07/YAN_PETR_L_07-26.png?itok=B6thBTVc'
+  },
+  stats: {
+    record: { wins: 19, losses: 5, draws: 0 },
+    winByMethod: {
+      ko: { value: 7, percent: 0.37 },
+      decision: { value: 11, percent: 0.58 },
+      submission: { value: 1, percent: 0.05 },
+      firstRoundFinishes: 3
+    },
+    strikingAccuracy: {
+      significantStrikesLanded: 1317,
+      significantStrikesAttempted: 2422,
+      significantStrikeLandedPercent: 0.54
+    },
+    takedownAccuracy: {
+      takedownsLanded: 0,
+      takedownsAttempted: 56,
+      takedownsLandedPercent: 0
+    },
+    striking: {
+      significantStrikesLanded: 5.12,
+      significantStrikesAbsorbed: 4.14,
+      significantStrikesDefense: 0.59
+    },
+    grappling: {
+      takedownAverage: 1.58,
+      takedownDefensePercent: 0.85,
+      submissionAverage: 0.12
+    },
+    metrics: { knockdownAverage: 0.58, averageFightTime: '17:08' },
+    significantStrikeByPosition: {
+      standing: { value: 967, percent: 0.73 },
+      clinch: { value: 158, percent: 0.12 },
+      ground: { value: 192, percent: 0.15 }
+    },
+    significantStrikeByTarget: {
+      head: { value: 899, percent: 0.68 },
+      body: { value: 259, percent: 0.2 },
+      leg: { value: 159, percent: 0.12 }
+    }
+  }
+}
+```
+
+#### getFighterRecord(slug: string, pageNumber?: number): Promise<FighterRecord[] | null>
+
+Retrieves record history for a fighter.
+
+```typescript
+// Returns:
+;[
+  {
+    fightId: 12182,
+    event: { name: 'UFC 317', slug: 'ufc-317', date: '2025-06-28' },
+    red: { name: '', slug: 'brandon-royval', result: 'loss' },
+    blue: { name: 'Joshua Van', slug: 'joshua-van', result: 'win' },
+    result: { method: 'Decision - Unanimous', round: 3, time: '5:00' },
+  },
+  // ... more fights
+]
+```
+
+#### getFighters(pageNumber?: number): Promise<FighterSummary[] | null>
+
+Retrieves a single page of fighters from /athletes/all.
+
+```typescript
+// Returns:
+;[
+  {
+    nickname: 'The Assassin',
+    name: 'Danny Abbadi',
+    weight: 'Lightweight',
+    record: { wins: 2, losses: 2, draws: 0 },
+    slug: 'danny-abbadi',
+  },
+  {
+    nickname: null,
+    name: 'Nariman Abbassov',
+    weight: 'Lightweight',
+    record: { wins: 0, losses: 1, draws: 0 },
+    slug: 'nariman-abbassov',
+  },
+  {
+    nickname: 'Tank',
+    name: 'Tank Abbott',
+    weight: 'Heavyweight',
+    record: { wins: 8, losses: 10, draws: 0 },
+    slug: 'tank-abbott',
+  },
+  // ... more fighters
+]
+```
+
+#### getRankings(): Promise<Rankings | null>
+
+Retrieves current rankings across all weight divisions.
+
+```typescript
+// Returns:
+{
+  mensPoundForPound: [
+    { rank: 1, name: 'Islam Makhachev', slug: 'islam-makhachev' },
+    { rank: 2, name: 'Ilia Topuria', slug: 'ilia-topuria' },
+    { rank: 3, name: 'Merab Dvalishvili', slug: 'merab-dvalishvili' },
+    { rank: 4, name: 'Khamzat Chimaev', slug: 'khamzat-chimaev' },
+    { rank: 5, name: 'Alexandre Pantoja', slug: 'alexandre-pantoja' },
+    // ... more rankings
+  ],
+  flyweight: [
+    { rank: 1, name: 'Joshua Van', slug: 'joshua-van' },
+    { rank: 2, name: 'Brandon Moreno', slug: 'brandon-moreno' },
+    { rank: 3, name: 'Brandon Royval', slug: 'brandon-royval' },
+    // ... more rankings
+  ],
+  // ... all divisions
+}
+```
+
+#### getTitleholders(): Promise<Titleholders | null>
+
+Retrieves current UFC titleholders for each division.
+
+```typescript
+// Returns:
+{
+  flyweight: {
+    name: 'Alexandre Pantoja',
+    nickname: 'The Cannibal',
+    slug: 'alexandre-pantoja',
+    record: { wins: 30, losses: 5, draws: 0 },
+    lastFight: 'Alexandre Pantoja vs Kai Kara-France'
+  },
+  bantamweight: {
+    name: 'Merab Dvalishvili',
+    nickname: 'The Machine',
+    slug: 'merab-dvalishvili',
+    record: { wins: 21, losses: 4, draws: 0 },
+    lastFight: 'Merab Dvalishvili vs Cory Sandhagen'
+  },
+  // ... all divisions
+}
+```
 
 ## Installation
 
@@ -10,209 +346,16 @@ A UFC scraper built with Puppeteer that extracts fighter information, statistics
 npm install fightpuppet
 ```
 
-## Features
+Requires Node.js >= 18.0.0
 
-- 🥊 Scrape detailed fighter profiles and statistics
-- 📊 Get current UFC rankings across all weight divisions
-- 🏆 Retrieve current titleholders for each division
-- 📅 Access event information and fight cards
-- 🥇 Extract individual fight details
-- 🎯 Built with Puppeteer for reliable scraping
-- 📝 Full TypeScript support with included type definitions
+## Author
 
-## Usage
+Guillermo Guevara
 
-All functions return promises with typed data. Here are the main functions available:
+## Credit
 
-### Get Fighter Data
-
-Retrieve comprehensive fighter information and statistics:
-
-```typescript
-import { getFighter } from 'fightpuppet'
-
-// Get fighter by slug (URL-friendly name)
-const fighter = await getFighter('alexander-volkanovski')
-if (fighter) {
-  console.log(fighter.info.name) // "Alexander Volkanovski"
-  console.log(fighter.stats.record) // { wins: 26, losses: 2, draws: 0 }
-}
-```
-
-### Get Fighter List
-
-Get a paginated list of fighters with basic information:
-
-```typescript
-import { getFighters } from 'fightpuppet'
-
-const fighters = await getFighters(0) // Page 0 (first page)
-if (fighters) {
-  fighters.forEach((fighter) => {
-    console.log(
-      `${fighter.name} - ${fighter.record.wins}-${fighter.record.losses}-${fighter.record.draws}`
-    )
-  })
-}
-```
-
-### Get Event Fights
-
-Retrieve the fight card for a specific event:
-
-```typescript
-import { getEvent } from 'fightpuppet'
-
-const event = await getEvent('ufc-284-makhachev-vs-volkanovski')
-if (event) {
-  event.forEach((fight) => {
-    console.log(`${fight.red.name} vs ${fight.blue.name} - ${fight.boutType}`)
-  })
-}
-```
-
-### Get Events List
-
-Get upcoming or past UFC events:
-
-```typescript
-import { getUpcomingEvents, getPastEvents } from 'fightpuppet'
-
-const upcomingEvents = await getUpcomingEvents()
-const pastEvents = await getPastEvents(0) // Page 0
-```
-
-### Get Rankings
-
-Retrieve current UFC rankings for all divisions:
-
-```typescript
-import { getRankings } from 'fightpuppet'
-
-const rankings = await getRankings()
-if (rankings) {
-  const lightweightRankings = rankings.lightweight
-  console.log(lightweightRankings) // RankedFighter[] with rank, name, and url
-}
-```
-
-### Get Titleholders
-
-Retrieve current champions across all divisions:
-
-```typescript
-import { getTitleholders } from 'fightpuppet'
-
-const titleholders = await getTitleholders()
-if (titleholders) {
-  const lightweightChamp = titleholders.lightweight
-  console.log(lightweightChamp.name)
-  console.log(lightweightChamp.record)
-}
-```
-
-### Get Individual Fight Details
-
-Extract detailed statistics from a specific fight:
-
-```typescript
-import { getFight } from 'fightpuppet'
-
-const fight = await getFight('ufc-284-makhachev-vs-volkanovski', 12345)
-if (fight) {
-  console.log(fight)
-}
-```
-
-## TypeScript Types
-
-FightPuppet includes full TypeScript definitions. Here are the main type interfaces:
-
-```typescript
-// Fighter data
-interface Fighter {
-  info: FighterInfo
-  stats: FighterStats
-}
-
-// Event data
-interface Event {
-  eventName: string
-  headline: string
-  mainCard: StartTime
-  prelim: StartTime
-  slug: string
-  location: Location
-}
-
-// Fight card
-interface Fight {
-  boutType: string
-  red: Corner
-  blue: Corner
-  result: FightResult | null
-  awards: string[] | null
-}
-
-// Rankings
-interface RankedFighter {
-  rank: number
-  name: string
-  url: string
-}
-
-type Rankings = Record<string, DivisionRanking>
-```
-
-## API Reference
-
-### Functions
-
-- `getFighter(slug: string): Promise<Fighter | null>` - Get detailed fighter data
-- `getFighters(pageNumber: number): Promise<FighterSummary[] | null>` - Get paginated fighter list
-- `getEvent(slug: string): Promise<FightCard | null>` - Get event fight card
-- `getUpcomingEvents(): Promise<Event[] | null>` - Get upcoming events
-- `getPastEvents(pageNumber: number): Promise<Event[] | null>` - Get past events
-- `getRankings(): Promise<Rankings | null>` - Get current rankings
-- `getTitleholders(): Promise<Titleholders | null>` - Get current champions
-- `getFight(slug: string, fightId: number): Promise<any | null>` - Get fight details
-
-## Error Handling
-
-All functions return `null` when an error occurs. Always check for null values:
-
-```typescript
-const fighter = await getFighter('some-fighter')
-if (!fighter) {
-  console.error('Failed to retrieve fighter data')
-  return
-}
-// Safe to use fighter object
-```
-
-## How Fighter Slugs Work
-
-Fighter slugs are URL-friendly versions of fighter names used by UFC.com:
-
-- Spaces become hyphens
-- Names are lowercase
-- Special characters may be removed or modified
-
-Examples:
-
-- "Alexander Volkanovski" → "alexander-volkanovski"
-- "Max Holloway" → "max-holloway"
-- "Jamahal Hill" → "jamahal-hill"
-
-## Requirements
-
-- Node.js >= 18.0.0
-- Works with both CommonJS and ES modules
+This project is a fork of [UFC-Scraper](https://github.com/Vladimir-G4/UFC-Scraper) by Vladimir-G4.
 
 ## License
 
 MIT
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
