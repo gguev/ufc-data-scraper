@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio'
 import { fetchHtml } from '../utils/fetch.js'
 import { slugToEventName } from './events.js'
+import { DECIMAL_RADIX } from '../constants/index.js'
 
 export async function getFighterRecord(
   fighterSlug: string,
@@ -41,7 +42,7 @@ function parseFighterRecord($: cheerio.Root) {
           .next()
           .text()
           .trim(),
-        10
+        DECIMAL_RADIX
       )
       const time = $card
         .find('.c-card-event--athlete-results__result-label:contains("Time")')

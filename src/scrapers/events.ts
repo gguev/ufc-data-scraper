@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio'
 import { Event } from '../types/events.js'
 import { fetchHtml } from '../utils/fetch.js'
+import { UNIX_TO_MS } from '../constants/index.js'
 
 const UPCOMING_EVENTS_SELECTOR = '#events-list-upcoming'
 const PAST_EVENTS_SELECTOR = '#events-list-past'
@@ -58,12 +59,12 @@ function parseEventCards($: cheerio.Root, cssSelector: string): Event[] {
       eventName: slugToEventName(slug),
       headline,
       mainCard: {
-        dateTime: new Date(mainCardUnixTs * 1000).toISOString(),
+        dateTime: new Date(mainCardUnixTs * UNIX_TO_MS).toISOString(),
         unix: mainCardUnixTs,
       },
       prelim: {
         dateTime: hasPrelims
-          ? new Date(prelimUnixTs * 1000).toISOString()
+          ? new Date(prelimUnixTs * UNIX_TO_MS).toISOString()
           : null,
         unix: hasPrelims ? prelimUnixTs : null,
       },

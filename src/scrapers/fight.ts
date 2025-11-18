@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer'
+import { PERCENT_MULTIPLIER, DECIMAL_RADIX, FIGHT_STATS_CHUNK_SIZE, POSITION_STATS_CHUNK_SIZE } from '../constants/index.js'
 
 export async function getFight(slug: string, fightId: number) {
   const URL = `https://www.ufc.com/event/${slug}#${fightId}`
@@ -133,10 +134,10 @@ export async function getFight(slug: string, fightId: number) {
           raw.map((v, i) => ({
             landed: Number(v),
             percent: pct[i]
-              ? parseFloat(pct[i].replace(/[()%]/g, '')) / 100
+              ? parseFloat(pct[i].replace(/[()%]/g, '')) / PERCENT_MULTIPLIER
               : null,
             attempted: att[i]
-              ? parseInt(att[i].replace(/\D/g, '') || '0', 10)
+              ? parseInt(att[i].replace(/\D/g, '') || '0', DECIMAL_RADIX)
               : null,
           }))
 
@@ -145,24 +146,24 @@ export async function getFight(slug: string, fightId: number) {
             head: {
               landed: Number(h[i]),
               percent: hp[i]
-                ? parseFloat(hp[i].replace(/[()%]/g, '')) / 100
+                ? parseFloat(hp[i].replace(/[()%]/g, '')) / PERCENT_MULTIPLIER
                 : null,
             },
             body: {
               landed: Number(b[i]),
               percent: bp[i]
-                ? parseFloat(bp[i].replace(/[()%]/g, '')) / 100
+                ? parseFloat(bp[i].replace(/[()%]/g, '')) / PERCENT_MULTIPLIER
                 : null,
             },
             leg: {
               landed: Number(l[i]),
               percent: lp[i]
-                ? parseFloat(lp[i].replace(/[()%]/g, '')) / 100
+                ? parseFloat(lp[i].replace(/[()%]/g, '')) / PERCENT_MULTIPLIER
                 : null,
             },
           }))
 
-        const totalRounds = data.redFightOverview.length / (6 + 3)
+        const totalRounds = data.redFightOverview.length / (FIGHT_STATS_CHUNK_SIZE + POSITION_STATS_CHUNK_SIZE)
 
         const zipRed = zipFight(
           data.redFightOverview,
@@ -175,17 +176,17 @@ export async function getFight(slug: string, fightId: number) {
           data.blueAttempted
         )
 
-        const fightEnd = totalRounds * 6
-        const redFight = chunk(6, zipRed.slice(0, fightEnd))
-        const blueFight = chunk(6, zipBlue.slice(0, fightEnd))
+        const fightEnd = totalRounds * FIGHT_STATS_CHUNK_SIZE
+        const redFight = chunk(FIGHT_STATS_CHUNK_SIZE, zipRed.slice(0, fightEnd))
+        const blueFight = chunk(FIGHT_STATS_CHUNK_SIZE, zipBlue.slice(0, fightEnd))
 
         const redPos = chunk(
-          3,
-          zipRed.slice(fightEnd, fightEnd + totalRounds * 3)
+          POSITION_STATS_CHUNK_SIZE,
+          zipRed.slice(fightEnd, fightEnd + totalRounds * POSITION_STATS_CHUNK_SIZE)
         )
         const bluePos = chunk(
-          3,
-          zipBlue.slice(fightEnd, fightEnd + totalRounds * 3)
+          POSITION_STATS_CHUNK_SIZE,
+          zipBlue.slice(fightEnd, fightEnd + totalRounds * POSITION_STATS_CHUNK_SIZE)
         )
 
         const redTarget = zipTarget(

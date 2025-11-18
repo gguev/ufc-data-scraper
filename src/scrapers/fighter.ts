@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio'
 import { Fighter } from '../types/fighter.js'
 import { fetchHtml } from '../utils/fetch.js'
+import { PERCENT_MULTIPLIER, DECIMAL_RADIX, TO_FIXED_DECIMALS } from '../constants/index.js'
 
 export async function getFighter(slug: string): Promise<Fighter | null> {
   try {
@@ -103,7 +104,7 @@ function parseFighterStats($) {
     )
 
     const sigStrikeLandedPercent = parseFloat(
-      (sigStrikesLanded / sigStrikesAttempted).toFixed(2)
+      (sigStrikesLanded / sigStrikesAttempted).toFixed(TO_FIXED_DECIMALS)
     )
 
     const takedownsLanded = parseNumber(
@@ -123,7 +124,7 @@ function parseFighterStats($) {
     )
 
     const takedownsLandedPercent = parseFloat(
-      (takedownsLanded / takedownsAttempted).toFixed(2)
+      (takedownsLanded / takedownsAttempted).toFixed(TO_FIXED_DECIMALS)
     )
 
     const sigStrLanded = Number(
@@ -261,7 +262,7 @@ function parseValuePercent(txt: string): { value: number; percent: number } {
 
   return {
     value: Number(v),
-    percent: Number(p.replace(/[%()]/g, '')) / 100,
+    percent: Number(p.replace(/[%()]/g, '')) / PERCENT_MULTIPLIER,
   }
 }
 
@@ -270,5 +271,5 @@ function parseNumber(txt: string): number {
 }
 
 function parsePercent(txt: string): number {
-  return Number(txt.replace(/[^\d.]/g, '')) / 100
+  return Number(txt.replace(/[^\d.]/g, '')) / PERCENT_MULTIPLIER
 }

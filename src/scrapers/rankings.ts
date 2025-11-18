@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio'
 import { fetchHtml } from '../utils/fetch.js'
+import { DECIMAL_RADIX } from '../constants/index.js'
 
 // Map of exact header texts to normalized keys
 const divisionNameMap: Record<string, string> = {
@@ -58,7 +59,7 @@ export async function getRankings() {
             .find('.views-field-weight-class-rank')
             .text()
             .trim()
-          const rank = parseInt(rankText, 10)
+          const rank = parseInt(rankText, DECIMAL_RADIX)
 
           const fighterAnchor = $(row).find('.views-field-title a')
           const fighterName = fighterAnchor.text().trim()

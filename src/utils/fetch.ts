@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer'
+import { MS_TO_S, BROWSER_TIMEOUT, EXPONENTIAL_BACKOFF_BASE } from '../constants/index.js'
 
 const REQUEST_DELAY = 15000 // 15 seconds - UFC site delay
 const USER_AGENTS = [
@@ -20,7 +21,7 @@ async function rateLimit(): Promise<void> {
 
   if (timeSinceLast < REQUEST_DELAY) {
     const waitTime = REQUEST_DELAY - timeSinceLast
-    console.log(`[RATE LIMIT] Waiting ${Math.round(waitTime / 1000)}s`)
+    console.log(`[RATE LIMIT] Waiting ${Math.round(waitTime / MS_TO_S)}s`)
     await new Promise((resolve) => setTimeout(resolve, waitTime))
   }
 }
@@ -38,8 +39,8 @@ export async function fetchHtml(url: string, retries = 3): Promise<string> {
       console.error(`[ERROR] Puppeteer failed:`, error.message)
 
       if (attempt < retries) {
-        const backoffTime = Math.pow(2, attempt) * 1000
-        console.log(`[RETRY] Retrying in ${backoffTime / 1000}s`)
+        const backoffTime = Math.pow(EXPONENTIAL_BACKOFF_BASE, attempt) * MS_TO_S
+        console.log(`[RETRY] Retrying in ${backoffTime / MS_TO_S}s`)
         await new Promise((resolve) => setTimeout(resolve, backoffTime))
       }
     }
@@ -60,7 +61,7 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
       '--disable-blink-features=AutomationControlled',
     ],
     defaultViewport: null,
-    timeout: 60000,
+    timeout: BROWSER_TIMEOUT,
   })
 
   try {
@@ -73,7 +74,7 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
 
     await page.goto(url, {
       waitUntil: 'networkidle2',
-      timeout: 60000,
+      timeout: BROWSER_TIMEOUT,
     })
 
     return await page.content()
