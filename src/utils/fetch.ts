@@ -1,17 +1,5 @@
 import puppeteer from 'puppeteer'
-import {
-  BROWSER_TIMEOUT,
-  EXPONENTIAL_BACKOFF_BASE,
-  MS_TO_S,
-} from '../constants/index.js'
-
-const REQUEST_DELAY = 15000 // 15 seconds - UFC site delay
-const USER_AGENTS = [
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15',
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
-  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-]
+import { BROWSER_TIMEOUT, EXPONENTIAL_BACKOFF_BASE, MS_TO_S, REQUEST_DELAY, USER_AGENTS } from '../constants/index.js'
 
 let lastRequestTime = 0
 
@@ -43,8 +31,7 @@ export async function fetchHtml(url: string, retries = 3): Promise<string> {
       console.error(`[ERROR] Puppeteer failed:`, error.message)
 
       if (attempt < retries) {
-        const backoffTime =
-          Math.pow(EXPONENTIAL_BACKOFF_BASE, attempt) * MS_TO_S
+        const backoffTime = Math.pow(EXPONENTIAL_BACKOFF_BASE, attempt) * MS_TO_S
         console.log(`[RETRY] Retrying in ${backoffTime / MS_TO_S}s`)
         await new Promise((resolve) => setTimeout(resolve, backoffTime))
       }
@@ -63,10 +50,10 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
       '--disable-accelerated-2d-canvas',
       '--disable-gpu',
       '--start-maximized',
-      '--disable-blink-features=AutomationControlled',
+      '--disable-blink-features=AutomationControlled'
     ],
     defaultViewport: null,
-    timeout: BROWSER_TIMEOUT,
+    timeout: BROWSER_TIMEOUT
   })
 
   try {
@@ -74,12 +61,12 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
     await page.setUserAgent(getRandomUserAgent())
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'en-US,en;q=0.9',
-      Referer: 'https://www.google.com/',
+      Referer: 'https://www.google.com/'
     })
 
     await page.goto(url, {
       waitUntil: 'networkidle2',
-      timeout: BROWSER_TIMEOUT,
+      timeout: BROWSER_TIMEOUT
     })
 
     return await page.content()
