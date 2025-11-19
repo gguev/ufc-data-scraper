@@ -1,6 +1,6 @@
 # FightPuppet
 
-A scraper that uses Puppeteer and Cheerio to extract structured data from UFC.com.
+A web scraper that fetches fighters, events, rankings, records, and detailed fight statistics from UFC.com.
 
 ## Usage
 
@@ -31,7 +31,7 @@ Retrieves complete fight card for a specific UFC event using an event's slug.
 
 ```typescript
 // Returns:
-;[
+[
   {
     fightId: 12277,
     boutType: 'Heavyweight Title Bout',
@@ -64,7 +64,7 @@ Retrieves a single page of past UFC events.
 
 ```typescript
 // Returns:
-;[
+[
   {
     eventName: 'UFC 322',
     headline: 'Della Maddalena vs Makhachev',
@@ -88,7 +88,7 @@ Retrieves all upcoming UFC events.
 
 ```typescript
 // Returns:
-;[
+[
   {
     eventName: 'UFC Fight Night',
     headline: 'Tsarukyan vs Hooker',
@@ -246,7 +246,7 @@ Retrieves record history for a fighter.
 
 ```typescript
 // Returns:
-;[
+[
   {
     fightId: 12182,
     event: { name: 'UFC 317', slug: 'ufc-317', date: '2025-06-28' },
@@ -264,7 +264,7 @@ Retrieves a single page of fighters from /athletes/all.
 
 ```typescript
 // Returns:
-;[
+[
   {
     nickname: 'The Assassin',
     name: 'Danny Abbadi',
