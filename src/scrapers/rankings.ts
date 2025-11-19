@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio'
 import { DECIMAL_RADIX } from '../constants/index.js'
 import { fetchHtml } from '../utils/fetch.js'
+import { RankedFighter, Rankings, DivisionRanking } from '../types/rankings.js'
 
 // Map of exact header texts to normalized keys
 const divisionNameMap: Record<string, string> = {
@@ -39,18 +40,18 @@ function normalizeDivisionName(headerRaw: string): string {
     .join('')
 }
 
-export async function getRankings() {
+export async function getRankings(): Promise<Rankings | null> {
   try {
     const url = 'https://www.ufc.com/rankings'
     const html = await fetchHtml(url)
     const $ = cheerio.load(html)
 
-    const rankings = {}
+    const rankings: Rankings = {}
     $('.view-grouping').each((i, element) => {
       const headerRaw = $(element).find('.view-grouping-header').text().trim()
       const weightClass = normalizeDivisionName(headerRaw)
 
-      const fighters = []
+      const fighters: DivisionRanking = {}
 
       $(element)
         .find('tbody tr')
@@ -70,11 +71,11 @@ export async function getRankings() {
           const fighterSlug = fighterUrl.split('/').filter(Boolean).pop() || ''
 
           if (!isNaN(rank)) {
-            fighters.push({
+            fighters[rank.toString()] = {
               rank,
               name: fighterName,
               slug: fighterSlug,
-            })
+            }
           }
         })
 
