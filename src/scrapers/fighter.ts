@@ -2,23 +2,45 @@ import * as cheerio from 'cheerio'
 import { PERCENT_MULTIPLIER, TO_FIXED_DECIMALS } from '../constants/index.js'
 import { Fighter } from '../types/fighter.js'
 import { fetchHtml } from '../utils/fetch.js'
+import { ScrapingError, ValidationError } from '../errors/index.js'
+import { validateSlug } from '../utils/validation.js'
 
-export async function getFighter(slug: string): Promise<Fighter | null> {
+export async function getFighter(slug: string): Promise<Fighter> {
+  // Validate input
+  const validatedSlug = validateSlug(slug, 'slug')
+  
   try {
-    const url = `https://www.ufc.com/athlete/${slug}`
+    const url = `https://www.ufc.com/athlete/${validatedSlug}`
 
     const html = await fetchHtml(url)
     const $ = cheerio.load(html)
 
+    const info = parseFighterInfo($)
+    const stats = parseFighterStats($)
+
+    if (!info) {
+      throw new ScrapingError('Failed to parse fighter info from page', { url })
+    }
+
+    if (!stats) {
+      throw new ScrapingError('Failed to parse fighter stats from page', { url })
+    }
+
     const fighterData: Fighter = {
-      info: parseFighterInfo($),
-      stats: parseFighterStats($)
+      info,
+      stats
     }
 
     return fighterData
   } catch (error) {
-    console.error(`[FATAL] Error scraping fighter data:`, error)
-    return null
+    if (error instanceof ValidationError || error instanceof ScrapingError) {
+      throw error
+    }
+    
+    throw new ScrapingError(`Failed to fetch fighter data: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
+      slug: validatedSlug,
+      originalError: error instanceof Error ? error.stack : String(error) 
+    })
   }
 }
 

@@ -1,19 +1,35 @@
 import * as cheerio from 'cheerio'
 import { Corner, FightCard } from '../types/event.js'
 import { fetchHtml } from '../utils/fetch.js'
+import { ScrapingError, ValidationError } from '../errors/index.js'
+import { validateSlug } from '../utils/validation.js'
 
-export async function getEvent(slug: string): Promise<FightCard | null> {
+export async function getEvent(slug: string): Promise<FightCard> {
+  // Validate input
+  const validatedSlug = validateSlug(slug, 'slug')
+  
   try {
-    const url = `https://www.ufc.com/event/${slug}`
+    const url = `https://www.ufc.com/event/${validatedSlug}`
 
     const html = await fetchHtml(url)
     const $ = cheerio.load(html)
 
     const events = await parseEvent($)
 
-    return [...events]
-  } catch (err) {
-    console.error(err)
+    if (events.length === 0) {
+      throw new ScrapingError('No fight data found on event page', { url })
+    }
+
+    return events
+  } catch (error) {
+    if (error instanceof ValidationError || error instanceof ScrapingError) {
+      throw error
+    }
+    
+    throw new ScrapingError(`Failed to fetch event data: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
+      slug: validatedSlug,
+      originalError: error instanceof Error ? error.stack : String(error) 
+    })
   }
 }
 

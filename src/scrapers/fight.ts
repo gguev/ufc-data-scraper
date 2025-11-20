@@ -6,16 +6,23 @@ import {
   POSITION_STATS_CHUNK_SIZE
 } from '../constants/index.js'
 import { getRandomUserAgent, rateLimit, updateLastRequestTime } from '../utils/fetch.js'
+import { ScrapingError, ValidationError } from '../errors/index.js'
+import { validateSlug, validateNumber } from '../utils/validation.js'
 
 export async function getFight(slug: string, fightId: number) {
-  const URL = `https://www.ufc.com/event/${slug}#${fightId}`
+  // Validate inputs
+  const validatedSlug = validateSlug(slug, 'slug')
+  const validatedFightId = validateNumber(fightId, 'fightId', 1)
+  
+  const URL = `https://www.ufc.com/event/${validatedSlug}#${validatedFightId}`
 
+  let browser
   try {
     await rateLimit()
 
     console.log(`[PUPPETEER] Fetching: ${URL}`)
 
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       headless: true,
       args: [
         '--no-sandbox',
@@ -27,7 +34,7 @@ export async function getFight(slug: string, fightId: number) {
         '--disable-blink-features=AutomationControlled'
       ],
       defaultViewport: null,
-      timeout: 10000
+      timeout: 5000
     })
 
     const page = await browser.newPage()
@@ -39,14 +46,19 @@ export async function getFight(slug: string, fightId: number) {
 
     await page.goto(URL, {
       waitUntil: 'networkidle2',
-      timeout: 10000
+      timeout: 5000
     })
 
-    await page.waitForSelector('.details-content__iframe-wrapper iframe')
+    await page.waitForSelector('.details-content__iframe-wrapper iframe', { timeout: 5000 })
 
     const frames = await page.$$eval('.details-content__iframe-wrapper iframe', (frames) =>
       Array.from(frames).map((f: HTMLIFrameElement) => f.src)
     )
+
+    if (frames.length === 0) {
+      await browser.close()
+      throw new ScrapingError('No fight statistics frames found on the page', { url: URL })
+    }
 
     for (const src of frames) {
       const frame = page.frames().find((f) => f.url().includes(src) || f.url().endsWith(src))
@@ -208,7 +220,27 @@ export async function getFight(slug: string, fightId: number) {
 
       return buildAllSections(data)
     }
+
+    // If we get here, no frame contained valid data
+    await browser.close()
+    throw new ScrapingError('No valid fight statistics found in any frame', { url: URL, framesFound: frames.length })
   } catch (err) {
-    console.log(err)
+    // Ensure browser is closed on error
+    if (browser) {
+      try {
+        await browser.close()
+      } catch {
+        // Ignore errors when trying to close an already closed browser
+      }
+    }
+    
+    if (err instanceof ValidationError || err instanceof ScrapingError) {
+      throw err
+    }
+    
+    throw new ScrapingError(`Failed to fetch fight data: ${err instanceof Error ? err.message : 'Unknown error'}`, { 
+      url: URL, 
+      originalError: err instanceof Error ? err.stack : String(err) 
+    })
   }
 }

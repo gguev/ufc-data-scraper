@@ -10,11 +10,16 @@ export interface Location {
   country: string | null
 }
 
+export interface EventInfo {
+  name: string
+  headline?: string
+  date: string
+  slug: string
+}
+
 export interface Event {
-  eventName: string
-  headline: string
+  event: EventInfo
   mainCard: StartTime
   prelim: StartTime
-  slug: string
   location: Location
 }

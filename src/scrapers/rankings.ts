@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio'
 import { DECIMAL_RADIX } from '../constants/index.js'
 import { DivisionRanking, RankedFighter, Rankings } from '../types/rankings.js'
 import { fetchHtml } from '../utils/fetch.js'
+import { ScrapingError } from '../errors/index.js'
 
 // Map of exact header texts to normalized keys
 const divisionNameMap: Record<string, string> = {
@@ -38,7 +39,7 @@ function normalizeDivisionName(headerRaw: string): string {
     .join('')
 }
 
-export async function getRankings(): Promise<Rankings | null> {
+export async function getRankings(): Promise<Rankings> {
   try {
     const url = 'https://www.ufc.com/rankings'
     const html = await fetchHtml(url)
@@ -74,9 +75,19 @@ export async function getRankings(): Promise<Rankings | null> {
       rankings[weightClass] = fighters
     })
 
+    if (Object.keys(rankings).length === 0) {
+      throw new ScrapingError('No ranking data found on the page', { url })
+    }
+
     return rankings
   } catch (error) {
-    console.error(`[FATAL] Error scraping rankings:`, error)
-    return null
+    if (error instanceof ScrapingError) {
+      throw error
+    }
+    
+    throw new ScrapingError(`Failed to fetch rankings: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
+      url: 'https://www.ufc.com/rankings',
+      originalError: error instanceof Error ? error.stack : String(error) 
+    })
   }
 }

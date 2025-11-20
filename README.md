@@ -66,11 +66,14 @@ Retrieves a single page of past UFC events.
 // Returns:
 [
   {
-    eventName: 'UFC 322',
-    headline: 'Della Maddalena vs Makhachev',
+    event: {
+      name: 'UFC 322',
+      headline: 'Della Maddalena vs Makhachev',
+      date: '2025-11-16',
+      slug: 'ufc-322'
+    },
     mainCard: { dateTime: '2025-11-16T03:00:00.000Z', unix: 1763262000 },
     prelim: { dateTime: '2025-11-16T01:00:00.000Z', unix: 1763254800 },
-    slug: 'ufc-322',
     location: {
       venue: 'Madison Square Garden',
       locality: 'New York',
@@ -90,11 +93,14 @@ Retrieves all upcoming UFC events.
 // Returns:
 [
   {
-    eventName: 'UFC Fight Night',
-    headline: 'Tsarukyan vs Hooker',
+    event: {
+      name: 'UFC Fight Night',
+      headline: 'Tsarukyan vs Hooker',
+      date: '2025-11-22',
+      slug: 'ufc-fight-night-november-22-2025'
+    },
     mainCard: { dateTime: '2025-11-22T18:00:00.000Z', unix: 1763834400 },
     prelim: { dateTime: '2025-11-22T15:00:00.000Z', unix: 1763823600 },
-    slug: 'ufc-fight-night-november-22-2025',
     location: {
       venue: 'ABHA Arena',
       locality: 'Doha',

@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio'
 import { fetchHtml } from '../utils/fetch.js'
 import { parseRecord } from './fighter.js'
+import { ScrapingError } from '../errors/index.js'
 
 export async function getTitleholders() {
   try {
@@ -34,9 +35,19 @@ export async function getTitleholders() {
       }
     })
 
+    if (Object.keys(titleholdersDict).length === 0) {
+      throw new ScrapingError('No titleholders found on page', { url })
+    }
+
     return titleholdersDict
   } catch (error) {
-    console.error(`[FATAL] Error scraping titleholders:`, error)
-    return null
+    if (error instanceof ScrapingError) {
+      throw error
+    }
+    
+    throw new ScrapingError(`Failed to fetch titleholders: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
+      url: 'https://www.ufc.com/athletes',
+      originalError: error instanceof Error ? error.stack : String(error) 
+    })
   }
 }
