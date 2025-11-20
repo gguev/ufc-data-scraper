@@ -5,18 +5,41 @@ import {
   PERCENT_MULTIPLIER,
   POSITION_STATS_CHUNK_SIZE
 } from '../constants/index.js'
+import { getRandomUserAgent, rateLimit, updateLastRequestTime } from '../utils/fetch.js'
 
 export async function getFight(slug: string, fightId: number) {
   const URL = `https://www.ufc.com/event/${slug}#${fightId}`
 
   try {
-    const browser = await puppeteer.launch({ headless: true })
-    const page = await browser.newPage()
+    await rateLimit()
 
     console.log(`[PUPPETEER] Fetching: ${URL}`)
 
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--disable-gpu',
+        '--start-maximized',
+        '--disable-blink-features=AutomationControlled'
+      ],
+      defaultViewport: null,
+      timeout: 10000
+    })
+
+    const page = await browser.newPage()
+    await page.setUserAgent(getRandomUserAgent())
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': 'en-US,en;q=0.9',
+      Referer: 'https://www.google.com/'
+    })
+
     await page.goto(URL, {
-      waitUntil: 'networkidle2'
+      waitUntil: 'networkidle2',
+      timeout: 10000
     })
 
     await page.waitForSelector('.details-content__iframe-wrapper iframe')
@@ -179,6 +202,10 @@ export async function getFight(slug: string, fightId: number) {
       }
 
       await browser.close()
+
+      // Update lastRequestTime to maintain rate limiting consistency
+      updateLastRequestTime()
+
       return buildAllSections(data)
     }
   } catch (err) {
