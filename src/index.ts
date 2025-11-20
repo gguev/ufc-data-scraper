@@ -7,9 +7,11 @@ export { getFighters } from './scrapers/fighters.js'
 export { getRankings } from './scrapers/rankings.js'
 export { getTitleholders } from './scrapers/titleholders.js'
 
+export { ScrapingError, ValidationError, NetworkError } from './errors/index.js'
+
 export type { FightRecord, FightResult } from './types/common.js'
 export type { Corner, Fight, FightCard } from './types/event.js'
-export type { Event } from './types/events.js'
+export type { Event, EventInfo } from './types/events.js'
 export type { Fighter, FighterInfo, FighterStats } from './types/fighter.js'
 export type { FighterSummary } from './types/fighters.js'
 export type { DivisionRanking, RankedFighter, Rankings } from './types/rankings.js'
