@@ -2,8 +2,8 @@
   "name": "fightpuppet",
   "version": "1.0.0",
   "description": "A web scraper that fetches fighters, events, rankings, records, and detailed fight statistics from UFC.com.",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "engines": {
     "node": ">=18.0.0"
