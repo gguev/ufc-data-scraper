@@ -13,11 +13,15 @@ export const USER_AGENTS = [
 
 let lastRequestTime = 0
 
-function getRandomUserAgent() {
+export function getRandomUserAgent() {
   return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)]
 }
 
-async function rateLimit(): Promise<void> {
+export function updateLastRequestTime() {
+  lastRequestTime = Date.now()
+}
+
+export async function rateLimit(): Promise<void> {
   const now = Date.now()
   const timeSinceLast = now - lastRequestTime
 
@@ -35,7 +39,7 @@ export async function fetchHtml(url: string, retries = 3): Promise<string> {
       console.log(`[PUPPETEER] Fetching: ${url} (Attempt ${attempt})`)
 
       const html = await fetchWithPuppeteer(url)
-      lastRequestTime = Date.now()
+      updateLastRequestTime()
       return html
     } catch (error) {
       console.error(`[ERROR] Puppeteer failed:`, error.message)
