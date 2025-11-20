@@ -3,5 +3,5 @@ export interface RankedFighter {
   name: string
   slug: string
 }
-export type DivisionRanking = Record<string, RankedFighter>
+export type DivisionRanking = RankedFighter[]
 export type Rankings = Record<string, DivisionRanking>
