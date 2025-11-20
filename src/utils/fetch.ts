@@ -1,7 +1,8 @@
 import puppeteer from 'puppeteer'
+import { NetworkError } from '../errors/index.js'
 
 const MS_TO_S = 1000
-const BROWSER_TIMEOUT = 10000
+const BROWSER_TIMEOUT = 5000
 const EXPONENTIAL_BACKOFF_BASE = 2
 export const REQUEST_DELAY = 15000 // 15 seconds - UFC site delay
 export const USER_AGENTS = [
@@ -33,6 +34,8 @@ export async function rateLimit(): Promise<void> {
 }
 
 export async function fetchHtml(url: string, retries = 3): Promise<string> {
+  let lastError: Error | null = null
+
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       await rateLimit()
@@ -42,7 +45,8 @@ export async function fetchHtml(url: string, retries = 3): Promise<string> {
       updateLastRequestTime()
       return html
     } catch (error) {
-      console.error(`[ERROR] Puppeteer failed:`, error.message)
+      lastError = error instanceof Error ? error : new Error(String(error))
+      console.error(`[ERROR] Puppeteer failed:`, lastError.message)
 
       if (attempt < retries) {
         const backoffTime = Math.pow(EXPONENTIAL_BACKOFF_BASE, attempt) * MS_TO_S
@@ -51,26 +55,28 @@ export async function fetchHtml(url: string, retries = 3): Promise<string> {
       }
     }
   }
-  throw new Error(`All ${retries} attempts failed for URL: ${url}`)
+  
+  throw new NetworkError(`All ${retries} attempts failed for URL: ${url}`, url, undefined)
 }
 
 export async function fetchWithPuppeteer(url: string): Promise<string> {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--disable-gpu',
-      '--start-maximized',
-      '--disable-blink-features=AutomationControlled'
-    ],
-    defaultViewport: null,
-    timeout: BROWSER_TIMEOUT
-  })
-
+  let browser
   try {
+    browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--disable-gpu',
+        '--start-maximized',
+        '--disable-blink-features=AutomationControlled'
+      ],
+      defaultViewport: null,
+      timeout: BROWSER_TIMEOUT
+    })
+
     const page = await browser.newPage()
     await page.setUserAgent(getRandomUserAgent())
     await page.setExtraHTTPHeaders({
@@ -84,7 +90,14 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
     })
 
     return await page.content()
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('Timeout')) {
+      throw new NetworkError(`Request timeout: ${url}`, url, undefined)
+    }
+    throw error
   } finally {
-    await browser.close()
+    if (browser) {
+      await browser.close()
+    }
   }
 }
