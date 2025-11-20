@@ -50,7 +50,7 @@ export async function getRankings(): Promise<Rankings> {
       const headerRaw = $(element).find('.view-grouping-header').text().trim()
       const weightClass = normalizeDivisionName(headerRaw)
 
-      const fighters: DivisionRanking = {}
+      const fighters: DivisionRanking = []
 
       $(element)
         .find('tbody tr')
@@ -64,13 +64,16 @@ export async function getRankings(): Promise<Rankings> {
           const fighterSlug = fighterUrl.split('/').filter(Boolean).pop() || ''
 
           if (!isNaN(rank)) {
-            fighters[rank.toString()] = {
+            fighters.push({
               rank,
               name: fighterName,
               slug: fighterSlug
-            }
+            })
           }
         })
+
+      // Sort fighters by rank to maintain proper order
+      fighters.sort((a, b) => a.rank - b.rank)
 
       rankings[weightClass] = fighters
     })
