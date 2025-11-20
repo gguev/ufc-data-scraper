@@ -25,11 +25,7 @@ async function parseEvent($: cheerio.Root): Promise<FightCard> {
 
     const fightId = Number($row.attr('data-fmid')) ?? null
 
-    const boutType = $row
-      .find('.c-listing-fight__class-text')
-      .first()
-      .text()
-      .trim()
+    const boutType = $row.find('.c-listing-fight__class-text').first().text().trim()
 
     const $redCorner = $row.find('.c-listing-fight__corner--red')
     const $blueCorner = $row.find('.c-listing-fight__corner--blue')
@@ -73,7 +69,7 @@ async function parseEvent($: cheerio.Root): Promise<FightCard> {
       red,
       blue,
       result: method ? { method, round, time } : null,
-      awards: awards.length ? awards : null,
+      awards: awards.length ? awards : null
     }
   })
 
@@ -81,21 +77,11 @@ async function parseEvent($: cheerio.Root): Promise<FightCard> {
 }
 
 function parseCorner($corner, $row, index: 0 | 1): Corner {
-  const name = $row
-    .find('.c-listing-fight__corner-name')
-    .eq(index)
-    .text()
-    .replace(/\s+/g, ' ')
-    .trim()
+  const name = $row.find('.c-listing-fight__corner-name').eq(index).text().replace(/\s+/g, ' ').trim()
 
   const rankRaw =
     $corner.find('.js-listing-fight__corner-rank span').text().trim() ||
-    $row
-      .find('.js-listing-fight__corner-rank')
-      .eq(index)
-      .find('span')
-      .text()
-      .trim()
+    $row.find('.js-listing-fight__corner-rank').eq(index).find('span').text().trim()
 
   let rank = null
   if (rankRaw) {
@@ -107,19 +93,13 @@ function parseCorner($corner, $row, index: 0 | 1): Corner {
     }
   }
 
-  const oddsRaw = $row
-    .find('.c-listing-fight__odds-amount')
-    .eq(index)
-    .text()
-    .trim()
+  const oddsRaw = $row.find('.c-listing-fight__odds-amount').eq(index).text().trim()
   const odds = oddsRaw && /^[+-]?\d+$/.test(oddsRaw) ? oddsRaw : null
 
-  const country =
-    $row.find('.c-listing-fight__country-text').eq(index).text().trim() || null
+  const country = $row.find('.c-listing-fight__country-text').eq(index).text().trim() || null
 
   const outcome = (() => {
-    if ($corner.find('.c-listing-fight__outcome--no-contest').length)
-      return 'no contest'
+    if ($corner.find('.c-listing-fight__outcome--no-contest').length) return 'no contest'
     if ($corner.find('.c-listing-fight__outcome--draw').length) return 'draw'
     if ($corner.find('.c-listing-fight__outcome--win').length) return 'win'
     if ($corner.find('.c-listing-fight__outcome--loss').length) return 'loss'

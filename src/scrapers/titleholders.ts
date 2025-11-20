@@ -17,22 +17,11 @@ export async function getTitleholders() {
 
       const champAnchor = $(element).find('.ath-n__name a')
       const champName = champAnchor.text().trim()
-      const champUrl = new URL(champAnchor.attr('href'), 'https://www.ufc.com')
-        .href
+      const champUrl = new URL(champAnchor.attr('href'), 'https://www.ufc.com').href
 
-      const champNickname = $(element)
-        .find('.ath-nn__nickname .field__item')
-        .text()
-        .trim()
-        .replace(/^"|"$/g, '')
-      const champRecord = parseRecord(
-        $(element).find('.c-ath--record').text().trim()
-      )
-      const champLastFight = $(element)
-        .find('.view-fighter-last-fight .view-content .views-row')
-        .first()
-        .text()
-        .trim()
+      const champNickname = $(element).find('.ath-nn__nickname .field__item').text().trim().replace(/^"|"$/g, '')
+      const champRecord = parseRecord($(element).find('.c-ath--record').text().trim())
+      const champLastFight = $(element).find('.view-fighter-last-fight .view-content .views-row').first().text().trim()
 
       if (division) {
         titleholdersDict[division.toLowerCase()] = {
@@ -40,7 +29,7 @@ export async function getTitleholders() {
           nickname: champNickname,
           slug: champUrl.split('/').filter(Boolean).pop() || '',
           record: champRecord,
-          lastFight: champLastFight,
+          lastFight: champLastFight
         }
       }
     })

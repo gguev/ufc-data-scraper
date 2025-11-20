@@ -19,9 +19,7 @@ export async function getUpcomingEvents(): Promise<Event[] | null> {
   }
 }
 
-export async function getPastEvents(
-  pageNumber: Number = 0
-): Promise<Event[] | null> {
+export async function getPastEvents(pageNumber: Number = 0): Promise<Event[] | null> {
   try {
     const url = `https://www.ufc.com/events?page=${pageNumber}`
 
@@ -37,11 +35,7 @@ function parseEventCards($: cheerio.Root, cssSelector: string): Event[] {
 
   $(`${cssSelector} .c-card-event--result`).each((_, card) => {
     const $card = $(card)
-    const headline = $card
-      .find('.c-card-event--result__headline a')
-      .text()
-      .replace(/\s+/g, ' ')
-      .trim()
+    const headline = $card.find('.c-card-event--result__headline a').text().replace(/\s+/g, ' ').trim()
     const $dateDiv = $card.find('.c-card-event--result__date')
     const mainCardUnixTs = Number($dateDiv.attr('data-main-card-timestamp'))
     // const mainCardDate = $dateDiv.attr('data-main-card')
@@ -51,8 +45,7 @@ function parseEventCards($: cheerio.Root, cssSelector: string): Event[] {
     const slug = $dateDiv.find('a').attr('href').slice(7) ?? ''
     const venue = $card.find('h5').text().trim()
     const locality = $card.find('.locality').text().trim() || null
-    const administrativeArea =
-      $card.find('.administrative-area').text().trim() || null
+    const administrativeArea = $card.find('.administrative-area').text().trim() || null
     const country = $card.find('.country').text().trim() || null
 
     events.push({
@@ -60,21 +53,19 @@ function parseEventCards($: cheerio.Root, cssSelector: string): Event[] {
       headline,
       mainCard: {
         dateTime: new Date(mainCardUnixTs * UNIX_TO_MS).toISOString(),
-        unix: mainCardUnixTs,
+        unix: mainCardUnixTs
       },
       prelim: {
-        dateTime: hasPrelims
-          ? new Date(prelimUnixTs * UNIX_TO_MS).toISOString()
-          : null,
-        unix: hasPrelims ? prelimUnixTs : null,
+        dateTime: hasPrelims ? new Date(prelimUnixTs * UNIX_TO_MS).toISOString() : null,
+        unix: hasPrelims ? prelimUnixTs : null
       },
       slug,
       location: {
         venue,
         locality,
         administrativeArea,
-        country,
-      },
+        country
+      }
     })
   })
 

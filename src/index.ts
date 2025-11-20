@@ -12,9 +12,5 @@ export type { Corner, Fight, FightCard } from './types/event.js'
 export type { Event } from './types/events.js'
 export type { Fighter, FighterInfo, FighterStats } from './types/fighter.js'
 export type { FighterSummary } from './types/fighters.js'
-export type {
-  DivisionRanking,
-  RankedFighter,
-  Rankings,
-} from './types/rankings.js'
+export type { DivisionRanking, RankedFighter, Rankings } from './types/rankings.js'
 export type { Titleholder, Titleholders } from './types/titleholders.js'
