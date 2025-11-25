@@ -25,7 +25,7 @@ console.log(rankings.mensPoundForPound[0]) // { rank: 1, name: "Islam Makhachev"
 
 ### Functions
 
-#### getEvent(slug: string): Promise<FightCard>
+#### getEvent(slug: string): Promise&lt;FightCard&gt;
 
 Retrieves complete fight card for a specific UFC event using an event's slug.
 
@@ -58,7 +58,7 @@ Retrieves complete fight card for a specific UFC event using an event's slug.
 ]
 ```
 
-#### getPastEvents(pageNumber?: number): Promise<EventList>
+#### getPastEvents(pageNumber?: number): Promise&lt;EventList&gt;
 
 Retrieves a single page of past UFC events.
 
@@ -85,7 +85,7 @@ Retrieves a single page of past UFC events.
 ]
 ```
 
-#### getUpcomingEvents(): Promise<EventList>
+#### getUpcomingEvents(): Promise&lt;EventList&gt;
 
 Retrieves all upcoming UFC events.
 
@@ -112,7 +112,7 @@ Retrieves all upcoming UFC events.
 ]
 ```
 
-#### getFight(slug: string, fightId: number): Promise<FightStats>
+#### getFight(slug: string, fightId: number): Promise&lt;FightStats&gt;
 
 Retrieves detailed statistics of a single fight.
 
@@ -180,7 +180,7 @@ Retrieves detailed statistics of a single fight.
 }
 ```
 
-#### getFighter(slug: string): Promise<Fighter>
+#### getFighter(slug: string): Promise&lt;Fighter&gt;
 
 Retrieves fighter information and statistics.
 
@@ -246,7 +246,7 @@ Retrieves fighter information and statistics.
 }
 ```
 
-#### getFighterRecord(slug: string, pageNumber?: number): Promise<FighterRecordList | null>
+#### getFighterRecord(slug: string, pageNumber?: number): Promise&lt;FighterRecordList | null&gt;
 
 Retrieves record history for a fighter.
 
@@ -264,7 +264,7 @@ Retrieves record history for a fighter.
 ]
 ```
 
-#### getFighters(pageNumber?: number): Promise<FighterSummaryList>
+#### getFighters(pageNumber?: number): Promise&lt;FighterSummaryList&gt;
 
 Retrieves a single page of fighters from /athletes/all.
 
@@ -296,7 +296,7 @@ Retrieves a single page of fighters from /athletes/all.
 ]
 ```
 
-#### getRankings(): Promise<Rankings>
+#### getRankings(): Promise&lt;Rankings&gt;
 
 Retrieves current rankings across all weight divisions.
 
@@ -321,7 +321,7 @@ Retrieves current rankings across all weight divisions.
 }
 ```
 
-#### getTitleholders(): Promise<Titleholders>
+#### getTitleholders(): Promise&lt;Titleholders&gt;
 
 Retrieves current UFC titleholders for each division.
 
