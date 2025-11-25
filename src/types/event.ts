@@ -10,6 +10,7 @@ export interface Corner {
 }
 
 export interface Fight {
+  fightId: number
   boutType: string
   red: Corner
   blue: Corner

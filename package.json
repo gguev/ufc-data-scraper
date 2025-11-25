@@ -1,5 +1,5 @@
 {
-  "name": "fightpuppet",
+  "name": "ufc-data-scraper",
   "version": "1.0.0",
   "description": "A web scraper that fetches fighters, events, rankings, records, and detailed fight statistics from UFC.com.",
   "main": "dist/index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gguev/fightpuppet.git"
+    "url": "git+https://github.com/gguev/ufc-data-scraper"
   },
   "keywords": [
     "ufc",
@@ -42,9 +42,9 @@
     "typescript": "^5.9.2"
   },
   "bugs": {
-    "url": "https://github.com/gguev/fightpuppet/issues"
+    "url": "https://github.com/gguev/ufc-data-scraper/issues"
   },
-  "homepage": "https://github.com/gguev/fightpuppet#readme",
+  "homepage": "https://github.com/gguev/ufc-data-scraper#readme",
   "dependencies": {
     "cheerio": "^1.1.2",
     "puppeteer": "^24.29.1",

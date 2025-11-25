@@ -7,3 +7,5 @@ export interface FighterSummary {
   record: FightRecord
   slug: string
 }
+
+export type FighterSummaryList = FighterSummary[]

@@ -1,4 +1,4 @@
-# FightPuppet
+# ufc-data-scraper
 
 A web scraper that fetches fighters, events, rankings, records, and detailed fight statistics from UFC.com.
 
@@ -25,7 +25,7 @@ console.log(rankings.mensPoundForPound[0]) // { rank: 1, name: "Islam Makhachev"
 
 ### Functions
 
-#### getEvent(slug: string): Promise<FightCard | null>
+#### getEvent(slug: string): Promise<FightCard>
 
 Retrieves complete fight card for a specific UFC event using an event's slug.
 
@@ -58,7 +58,7 @@ Retrieves complete fight card for a specific UFC event using an event's slug.
 ]
 ```
 
-#### getPastEvents(pageNumber?: number): Promise<Event[] | null>
+#### getPastEvents(pageNumber?: number): Promise<EventList>
 
 Retrieves a single page of past UFC events.
 
@@ -85,7 +85,7 @@ Retrieves a single page of past UFC events.
 ]
 ```
 
-#### getUpcomingEvents(): Promise<Event[] | null>
+#### getUpcomingEvents(): Promise<EventList>
 
 Retrieves all upcoming UFC events.
 
@@ -112,7 +112,7 @@ Retrieves all upcoming UFC events.
 ]
 ```
 
-#### getFight(slug: string, fightId: number): Promise<any | null>
+#### getFight(slug: string, fightId: number): Promise<FightStats>
 
 Retrieves detailed statistics of a single fight.
 
@@ -180,7 +180,7 @@ Retrieves detailed statistics of a single fight.
 }
 ```
 
-#### getFighter(slug: string): Promise<Fighter | null>
+#### getFighter(slug: string): Promise<Fighter>
 
 Retrieves fighter information and statistics.
 
@@ -246,7 +246,7 @@ Retrieves fighter information and statistics.
 }
 ```
 
-#### getFighterRecord(slug: string, pageNumber?: number): Promise<FighterRecord[] | null>
+#### getFighterRecord(slug: string, pageNumber?: number): Promise<FighterRecordList | null>
 
 Retrieves record history for a fighter.
 
@@ -264,7 +264,7 @@ Retrieves record history for a fighter.
 ]
 ```
 
-#### getFighters(pageNumber?: number): Promise<FighterSummary[] | null>
+#### getFighters(pageNumber?: number): Promise<FighterSummaryList>
 
 Retrieves a single page of fighters from /athletes/all.
 
@@ -296,7 +296,7 @@ Retrieves a single page of fighters from /athletes/all.
 ]
 ```
 
-#### getRankings(): Promise<Rankings | null>
+#### getRankings(): Promise<Rankings>
 
 Retrieves current rankings across all weight divisions.
 
@@ -321,7 +321,7 @@ Retrieves current rankings across all weight divisions.
 }
 ```
 
-#### getTitleholders(): Promise<Titleholders | null>
+#### getTitleholders(): Promise<Titleholders>
 
 Retrieves current UFC titleholders for each division.
 
@@ -353,6 +353,36 @@ npm install fightpuppet
 ```
 
 Requires Node.js >= 18.0.0
+
+## Type Definitions
+
+The library exports comprehensive TypeScript types for all data structures:
+
+```typescript
+// Error types
+export { ScrapingError, ValidationError, NetworkError }
+
+// Common types
+export type { FightRecord, FightResult, FighterInfo }
+
+// Event types
+export type { Corner, Fight, FightCard, Event, EventInfo, EventList }
+
+// Fighter types
+export type { Fighter, FighterStats, FighterSummary, FighterSummaryList }
+
+// Fighter record types
+export type { FighterEvent, FighterBasicProfile, FighterRecord, FighterRecordList }
+
+// Fight statistics types
+export type { FightStats, FightStatBlock, FightPositionStats, FightTargetStats, FightOverview, FightSideStats }
+
+// Rankings types
+export type { DivisionRanking, RankedFighter, Rankings }
+
+// Titleholders types
+export type { Titleholder, Titleholders }
+```
 
 ## Author
 

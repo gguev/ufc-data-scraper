@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio'
 import { UNIX_TO_MS } from '../constants/index.js'
-import { Event } from '../types/events.js'
+import { Event, EventList } from '../types/events.js'
 import { fetchHtml } from '../utils/fetch.js'
 import { ScrapingError, ValidationError } from '../errors/index.js'
 import { validateNumber } from '../utils/validation.js'
@@ -8,7 +8,7 @@ import { validateNumber } from '../utils/validation.js'
 const UPCOMING_EVENTS_SELECTOR = '#events-list-upcoming'
 const PAST_EVENTS_SELECTOR = '#events-list-past'
 
-export async function getUpcomingEvents(): Promise<Event[]> {
+export async function getUpcomingEvents(): Promise<EventList> {
   try {
     const url = 'https://www.ufc.com/events#events-list-upcoming'
 
@@ -30,7 +30,7 @@ export async function getUpcomingEvents(): Promise<Event[]> {
   }
 }
 
-export async function getPastEvents(pageNumber: number = 0): Promise<Event[]> {
+export async function getPastEvents(pageNumber: number = 0): Promise<EventList> {
   const validatedPageNumber = validateNumber(pageNumber, 'pageNumber', 0)
   
   try {
@@ -54,7 +54,7 @@ export async function getPastEvents(pageNumber: number = 0): Promise<Event[]> {
   }
 }
 
-function parseEventCards($: cheerio.Root, cssSelector: string): Event[] {
+function parseEventCards($: cheerio.Root, cssSelector: string): EventList {
   const events: Event[] = []
 
   $(`${cssSelector} .c-card-event--result`).each((_, card) => {

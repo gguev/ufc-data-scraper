@@ -23,3 +23,5 @@ export interface Event {
   prelim: StartTime
   location: Location
 }
+
+export type EventList = Event[]

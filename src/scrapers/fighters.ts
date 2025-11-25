@@ -1,10 +1,10 @@
 import * as cheerio from 'cheerio'
-import { FighterSummary } from '../types/fighters.js'
+import { FighterSummary, FighterSummaryList } from '../types/fighters.js'
 import { fetchHtml } from '../utils/fetch.js'
 import { ScrapingError, ValidationError } from '../errors/index.js'
 import { validateNumber } from '../utils/validation.js'
 
-export async function getFighters(pageNumber: number = 0): Promise<FighterSummary[]> {
+export async function getFighters(pageNumber: number = 0): Promise<FighterSummaryList> {
   // Validate input
   const validatedPageNumber = validateNumber(pageNumber, 'pageNumber', 0)
   
@@ -29,7 +29,7 @@ export async function getFighters(pageNumber: number = 0): Promise<FighterSummar
   }
 }
 
-function parseFighters($: cheerio.Root): FighterSummary[] {
+function parseFighters($: cheerio.Root): FighterSummaryList {
   const fighters = []
 
   $('.c-listing-athlete-flipcard__inner').each((_, element) => {
