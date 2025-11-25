@@ -5,7 +5,7 @@ A web scraper that fetches fighters, events, rankings, records, and detailed fig
 ## Usage
 
 ```typescript
-import { getEvent, getFighter, getRankings } from 'fightpuppet'
+import { getEvent, getFighter, getRankings } from 'ufc-data-scraper'
 
 // Get UFC event fights
 const event = await getEvent('ufc-321')
@@ -349,40 +349,11 @@ Retrieves current UFC titleholders for each division.
 ## Installation
 
 ```bash
-npm install fightpuppet
+npm install ufc-data-scraper
 ```
 
 Requires Node.js >= 18.0.0
 
-## Type Definitions
-
-The library exports comprehensive TypeScript types for all data structures:
-
-```typescript
-// Error types
-export { ScrapingError, ValidationError, NetworkError }
-
-// Common types
-export type { FightRecord, FightResult, FighterInfo }
-
-// Event types
-export type { Corner, Fight, FightCard, Event, EventInfo, EventList }
-
-// Fighter types
-export type { Fighter, FighterStats, FighterSummary, FighterSummaryList }
-
-// Fighter record types
-export type { FighterEvent, FighterBasicProfile, FighterRecord, FighterRecordList }
-
-// Fight statistics types
-export type { FightStats, FightStatBlock, FightPositionStats, FightTargetStats, FightOverview, FightSideStats }
-
-// Rankings types
-export type { DivisionRanking, RankedFighter, Rankings }
-
-// Titleholders types
-export type { Titleholder, Titleholders }
-```
 
 ## Author
 
