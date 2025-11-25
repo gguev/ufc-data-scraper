@@ -246,7 +246,7 @@ Retrieves fighter information and statistics.
 }
 ```
 
-#### getFighterRecord(slug: string, pageNumber?: number): Promise&lt;FighterRecordList | null&gt;
+#### getFighterRecord(slug: string, pageNumber?: number): Promise&lt;FighterRecordList&gt;
 
 Retrieves record history for a fighter.
 
@@ -352,7 +352,6 @@ Retrieves current UFC titleholders for each division.
 npm install ufc-data-scraper
 ```
 
-Requires Node.js >= 18.0.0
 
 
 ## Author
