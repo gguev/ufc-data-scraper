@@ -4,8 +4,9 @@ import { fetchHtml } from '../utils/fetch.js'
 import { slugToEventName } from './events.js'
 import { ScrapingError, ValidationError } from '../errors/index.js'
 import { validateSlug, validateNumber } from '../utils/validation.js'
+import { FighterRecordList } from '../types/fighterRecord.js'
 
-export async function getFighterRecord(fighterSlug: string, pageNumber: number = 0) {
+export async function getFighterRecord(fighterSlug: string, pageNumber: number = 0): Promise<FighterRecordList> {
   // Validate inputs
   const validatedSlug = validateSlug(fighterSlug, 'fighterSlug')
   const validatedPageNumber = validateNumber(pageNumber, 'pageNumber', 0)
@@ -32,8 +33,8 @@ export async function getFighterRecord(fighterSlug: string, pageNumber: number =
   }
 }
 
-function parseFighterRecord($: cheerio.Root) {
-  const fights = []
+function parseFighterRecord($: cheerio.Root): FighterRecordList {
+  const fights: FighterRecordList = []
 
   $('li.l-listing__item article.c-card-event--athlete-results').each((_, card) => {
     const $card = $(card)

@@ -2,14 +2,15 @@ import * as cheerio from 'cheerio'
 import { fetchHtml } from '../utils/fetch.js'
 import { parseRecord } from './fighter.js'
 import { ScrapingError } from '../errors/index.js'
+import { Titleholders } from '../types/titleholders.js'
 
-export async function getTitleholders() {
+export async function getTitleholders(): Promise<Titleholders> {
   try {
     const url = 'https://www.ufc.com/athletes'
     const html = await fetchHtml(url)
     const $ = cheerio.load(html)
 
-    let titleholdersDict: Record<string, any> = {}
+    const titleholdersDict: Titleholders = {}
 
     $('.l-listing__item').each((i, element) => {
       const division = $(element).find('.ath-wlcass strong').text().trim()

@@ -8,8 +8,9 @@ import {
 import { getRandomUserAgent, rateLimit, updateLastRequestTime } from '../utils/fetch.js'
 import { ScrapingError, ValidationError } from '../errors/index.js'
 import { validateSlug, validateNumber } from '../utils/validation.js'
+import { FightStats } from '../types/fight.js'
 
-export async function getFight(slug: string, fightId: number) {
+export async function getFight(slug: string, fightId: number): Promise<FightStats> {
   // Validate inputs
   const validatedSlug = validateSlug(slug, 'slug')
   const validatedFightId = validateNumber(fightId, 'fightId', 1)
@@ -118,7 +119,7 @@ export async function getFight(slug: string, fightId: number) {
         }
       })
 
-      function buildAllSections(data) {
+      function buildAllSections(data: any): FightStats {
         const chunk = (size, arr) =>
           Array.from({ length: Math.ceil(arr.length / size) }, (_, i) => arr.slice(i * size, i * size + size))
 
