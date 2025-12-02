@@ -1,3 +1,4 @@
+
 # ufc-data-scraper
 
 A web scraper that fetches fighters, events, rankings, records, and detailed fight statistics from UFC.com.
@@ -27,7 +28,7 @@ console.log(rankings.mensPoundForPound[0]) // { rank: 1, name: "Islam Makhachev"
 
 #### getEvent(slug: string): Promise&lt;FightCard&gt;
 
-Retrieves complete fight card for a specific UFC event using an event's slug.
+Retrieves complete fight card for a UFC event from https://www.ufc.com/event/.
 
 ```typescript
 // Returns:
@@ -60,7 +61,7 @@ Retrieves complete fight card for a specific UFC event using an event's slug.
 
 #### getPastEvents(pageNumber?: number): Promise&lt;EventList&gt;
 
-Retrieves a single page of past UFC events.
+Retrieves the past 8 UFC events from https://www.ufc.com/events?page=, ordered from latest to oldest.
 
 ```typescript
 // Returns:
@@ -87,7 +88,7 @@ Retrieves a single page of past UFC events.
 
 #### getUpcomingEvents(): Promise&lt;EventList&gt;
 
-Retrieves all upcoming UFC events.
+Retrieves all upcoming UFC events from https://www.ufc.com/events#events-list-upcoming.
 
 ```typescript
 // Returns:
@@ -114,7 +115,7 @@ Retrieves all upcoming UFC events.
 
 #### getFight(slug: string, fightId: number): Promise&lt;FightStats&gt;
 
-Retrieves detailed statistics of a single fight.
+Retrieves detailed statistics of a single fight from https://www.ufc.com/event/.
 
 ```typescript
 // Returns:
@@ -182,7 +183,7 @@ Retrieves detailed statistics of a single fight.
 
 #### getFighter(slug: string): Promise&lt;Fighter&gt;
 
-Retrieves fighter information and statistics.
+Retrieves a fighter's profile from https://www.ufc.com/athlete/.
 
 ```typescript
 // Returns:
@@ -248,7 +249,7 @@ Retrieves fighter information and statistics.
 
 #### getFighterRecord(slug: string, pageNumber?: number): Promise&lt;FighterRecordList&gt;
 
-Retrieves record history for a fighter.
+Retrieves the past 3 fights of a fighter's history from https://www.ufc.com/athlete/, ordered from latest to oldest.
 
 ```typescript
 // Returns:
@@ -266,7 +267,7 @@ Retrieves record history for a fighter.
 
 #### getFighters(pageNumber?: number): Promise&lt;FighterSummaryList&gt;
 
-Retrieves a single page of fighters from /athletes/all.
+Retrieves 12 fighters from https://www.ufc.com/athletes/all?page=, ordered alphabetically.
 
 ```typescript
 // Returns:
@@ -298,7 +299,7 @@ Retrieves a single page of fighters from /athletes/all.
 
 #### getRankings(): Promise&lt;Rankings&gt;
 
-Retrieves current rankings across all weight divisions.
+Retrieves current rankings across all weight divisions from https://www.ufc.com/rankings.
 
 ```typescript
 // Returns:
@@ -323,7 +324,7 @@ Retrieves current rankings across all weight divisions.
 
 #### getTitleholders(): Promise&lt;Titleholders&gt;
 
-Retrieves current UFC titleholders for each division.
+Retrieves current UFC titleholders for each division from https://www.ufc.com/athletes.
 
 ```typescript
 // Returns:
