@@ -1,14 +1,13 @@
 import * as cheerio from 'cheerio'
 import { PERCENT_MULTIPLIER, TO_FIXED_DECIMALS } from '../constants/index.js'
+import { ScrapingError, ValidationError } from '../errors/index.js'
 import { Fighter } from '../types/fighter.js'
 import { fetchHtml } from '../utils/fetch.js'
-import { ScrapingError, ValidationError } from '../errors/index.js'
 import { validateSlug } from '../utils/validation.js'
 
 export async function getFighter(slug: string): Promise<Fighter> {
-  // Validate input
   const validatedSlug = validateSlug(slug, 'slug')
-  
+
   try {
     const url = `https://www.ufc.com/athlete/${validatedSlug}`
 
@@ -36,11 +35,14 @@ export async function getFighter(slug: string): Promise<Fighter> {
     if (error instanceof ValidationError || error instanceof ScrapingError) {
       throw error
     }
-    
-    throw new ScrapingError(`Failed to fetch fighter data: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
-      slug: validatedSlug,
-      originalError: error instanceof Error ? error.stack : String(error) 
-    })
+
+    throw new ScrapingError(
+      `Failed to fetch fighter data: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      {
+        slug: validatedSlug,
+        originalError: error instanceof Error ? error.stack : String(error)
+      }
+    )
   }
 }
 

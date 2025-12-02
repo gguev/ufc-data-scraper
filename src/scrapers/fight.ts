@@ -5,16 +5,15 @@ import {
   PERCENT_MULTIPLIER,
   POSITION_STATS_CHUNK_SIZE
 } from '../constants/index.js'
-import { getRandomUserAgent, rateLimit, updateLastRequestTime } from '../utils/fetch.js'
 import { ScrapingError, ValidationError } from '../errors/index.js'
-import { validateSlug, validateNumber } from '../utils/validation.js'
 import { FightStats } from '../types/fight.js'
+import { getRandomUserAgent, rateLimit, updateLastRequestTime } from '../utils/fetch.js'
+import { validateNumber, validateSlug } from '../utils/validation.js'
 
 export async function getFight(slug: string, fightId: number): Promise<FightStats> {
-  // Validate inputs
   const validatedSlug = validateSlug(slug, 'slug')
   const validatedFightId = validateNumber(fightId, 'fightId', 1)
-  
+
   const URL = `https://www.ufc.com/event/${validatedSlug}#${validatedFightId}`
 
   let browser
@@ -216,32 +215,27 @@ export async function getFight(slug: string, fightId: number): Promise<FightStat
 
       await browser.close()
 
-      // Update lastRequestTime to maintain rate limiting consistency
       updateLastRequestTime()
 
       return buildAllSections(data)
     }
 
-    // If we get here, no frame contained valid data
     await browser.close()
     throw new ScrapingError('No valid fight statistics found in any frame', { url: URL, framesFound: frames.length })
   } catch (err) {
-    // Ensure browser is closed on error
     if (browser) {
       try {
         await browser.close()
-      } catch {
-        // Ignore errors when trying to close an already closed browser
-      }
+      } catch {}
     }
-    
+
     if (err instanceof ValidationError || err instanceof ScrapingError) {
       throw err
     }
-    
-    throw new ScrapingError(`Failed to fetch fight data: ${err instanceof Error ? err.message : 'Unknown error'}`, { 
-      url: URL, 
-      originalError: err instanceof Error ? err.stack : String(err) 
+
+    throw new ScrapingError(`Failed to fetch fight data: ${err instanceof Error ? err.message : 'Unknown error'}`, {
+      url: URL,
+      originalError: err instanceof Error ? err.stack : String(err)
     })
   }
 }

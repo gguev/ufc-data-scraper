@@ -1,16 +1,15 @@
 import * as cheerio from 'cheerio'
 import { DECIMAL_RADIX } from '../constants/index.js'
-import { fetchHtml } from '../utils/fetch.js'
-import { slugToEventName } from './events.js'
 import { ScrapingError, ValidationError } from '../errors/index.js'
-import { validateSlug, validateNumber } from '../utils/validation.js'
 import { FighterRecordList } from '../types/fighterRecord.js'
+import { fetchHtml } from '../utils/fetch.js'
+import { validateNumber, validateSlug } from '../utils/validation.js'
+import { slugToEventName } from './events.js'
 
 export async function getFighterRecord(fighterSlug: string, pageNumber: number = 0): Promise<FighterRecordList> {
-  // Validate inputs
   const validatedSlug = validateSlug(fighterSlug, 'fighterSlug')
   const validatedPageNumber = validateNumber(pageNumber, 'pageNumber', 0)
-  
+
   try {
     const url = `https://www.ufc.com/athlete/${validatedSlug}?page=${validatedPageNumber}`
 
@@ -24,12 +23,15 @@ export async function getFighterRecord(fighterSlug: string, pageNumber: number =
     if (error instanceof ValidationError || error instanceof ScrapingError) {
       throw error
     }
-    
-    throw new ScrapingError(`Failed to fetch fighter record: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
-      slug: validatedSlug,
-      pageNumber: validatedPageNumber,
-      originalError: error instanceof Error ? error.stack : String(error) 
-    })
+
+    throw new ScrapingError(
+      `Failed to fetch fighter record: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      {
+        slug: validatedSlug,
+        pageNumber: validatedPageNumber,
+        originalError: error instanceof Error ? error.stack : String(error)
+      }
+    )
   }
 }
 

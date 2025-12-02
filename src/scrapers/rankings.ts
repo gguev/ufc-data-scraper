@@ -1,10 +1,9 @@
 import * as cheerio from 'cheerio'
 import { DECIMAL_RADIX } from '../constants/index.js'
+import { ScrapingError } from '../errors/index.js'
 import { DivisionRanking, RankedFighter, Rankings } from '../types/rankings.js'
 import { fetchHtml } from '../utils/fetch.js'
-import { ScrapingError } from '../errors/index.js'
 
-// Map of exact header texts to normalized keys
 const divisionNameMap: Record<string, string> = {
   "men's pound-for-pound top rank": 'mensPoundForPound',
   "women's pound-for-pound top rank": 'womensPoundForPound',
@@ -23,13 +22,11 @@ const divisionNameMap: Record<string, string> = {
 }
 
 function normalizeDivisionName(headerRaw: string): string {
-  // First try exact match in our map
   const normalized = divisionNameMap[headerRaw.toLowerCase().trim()]
   if (normalized) {
     return normalized
   }
 
-  // Fallback to basic camelCase conversion for any unknown divisions
   return headerRaw
     .trim()
     .split(' ')
@@ -72,7 +69,6 @@ export async function getRankings(): Promise<Rankings> {
           }
         })
 
-      // Sort fighters by rank to maintain proper order
       fighters.sort((a, b) => a.rank - b.rank)
 
       rankings[weightClass] = fighters
@@ -87,10 +83,10 @@ export async function getRankings(): Promise<Rankings> {
     if (error instanceof ScrapingError) {
       throw error
     }
-    
-    throw new ScrapingError(`Failed to fetch rankings: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
+
+    throw new ScrapingError(`Failed to fetch rankings: ${error instanceof Error ? error.message : 'Unknown error'}`, {
       url: 'https://www.ufc.com/rankings',
-      originalError: error instanceof Error ? error.stack : String(error) 
+      originalError: error instanceof Error ? error.stack : String(error)
     })
   }
 }

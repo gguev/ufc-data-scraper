@@ -1,13 +1,12 @@
 import * as cheerio from 'cheerio'
+import { ScrapingError, ValidationError } from '../errors/index.js'
 import { FighterSummary, FighterSummaryList } from '../types/fighters.js'
 import { fetchHtml } from '../utils/fetch.js'
-import { ScrapingError, ValidationError } from '../errors/index.js'
 import { validateNumber } from '../utils/validation.js'
 
 export async function getFighters(pageNumber: number = 0): Promise<FighterSummaryList> {
-  // Validate input
   const validatedPageNumber = validateNumber(pageNumber, 'pageNumber', 0)
-  
+
   try {
     const url = `https://www.ufc.com/athletes/all?page=${validatedPageNumber}`
 
@@ -21,10 +20,10 @@ export async function getFighters(pageNumber: number = 0): Promise<FighterSummar
     if (error instanceof ValidationError || error instanceof ScrapingError) {
       throw error
     }
-    
-    throw new ScrapingError(`Failed to fetch fighters: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
+
+    throw new ScrapingError(`Failed to fetch fighters: ${error instanceof Error ? error.message : 'Unknown error'}`, {
       pageNumber: validatedPageNumber,
-      originalError: error instanceof Error ? error.stack : String(error) 
+      originalError: error instanceof Error ? error.stack : String(error)
     })
   }
 }

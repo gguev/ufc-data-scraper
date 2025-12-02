@@ -1,13 +1,12 @@
 import * as cheerio from 'cheerio'
+import { ScrapingError, ValidationError } from '../errors/index.js'
 import { Corner, FightCard } from '../types/event.js'
 import { fetchHtml } from '../utils/fetch.js'
-import { ScrapingError, ValidationError } from '../errors/index.js'
 import { validateSlug } from '../utils/validation.js'
 
 export async function getEvent(slug: string): Promise<FightCard> {
-  // Validate input
   const validatedSlug = validateSlug(slug, 'slug')
-  
+
   try {
     const url = `https://www.ufc.com/event/${validatedSlug}`
 
@@ -25,10 +24,10 @@ export async function getEvent(slug: string): Promise<FightCard> {
     if (error instanceof ValidationError || error instanceof ScrapingError) {
       throw error
     }
-    
-    throw new ScrapingError(`Failed to fetch event data: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
+
+    throw new ScrapingError(`Failed to fetch event data: ${error instanceof Error ? error.message : 'Unknown error'}`, {
       slug: validatedSlug,
-      originalError: error instanceof Error ? error.stack : String(error) 
+      originalError: error instanceof Error ? error.stack : String(error)
     })
   }
 }
