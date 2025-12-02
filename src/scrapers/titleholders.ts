@@ -1,8 +1,8 @@
 import * as cheerio from 'cheerio'
-import { fetchHtml } from '../utils/fetch.js'
-import { parseRecord } from './fighter.js'
 import { ScrapingError } from '../errors/index.js'
 import { Titleholders } from '../types/titleholders.js'
+import { fetchHtml } from '../utils/fetch.js'
+import { parseRecord } from './fighter.js'
 
 export async function getTitleholders(): Promise<Titleholders> {
   try {
@@ -13,7 +13,7 @@ export async function getTitleholders(): Promise<Titleholders> {
     const titleholdersDict: Titleholders = {}
 
     $('.l-listing__item').each((i, element) => {
-      const division = $(element).find('.ath-wlcass strong').text().trim()
+      const division = $(element).find('.ath-wlcass strong').text().trim().replace(/\s/g, '')
       const weight = $(element).find('.ath-weight').text().trim()
       // const champName = $(element).find('.ath-n__name a span').text().trim();
 
@@ -26,7 +26,7 @@ export async function getTitleholders(): Promise<Titleholders> {
       const champLastFight = $(element).find('.view-fighter-last-fight .view-content .views-row').first().text().trim()
 
       if (division) {
-        titleholdersDict[division.toLowerCase()] = {
+        titleholdersDict[division.charAt(0).toLowerCase() + division.slice(1).replace(/'/g, '')] = {
           name: champName,
           nickname: champNickname,
           slug: champUrl.split('/').filter(Boolean).pop() || '',
@@ -45,10 +45,13 @@ export async function getTitleholders(): Promise<Titleholders> {
     if (error instanceof ScrapingError) {
       throw error
     }
-    
-    throw new ScrapingError(`Failed to fetch titleholders: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
-      url: 'https://www.ufc.com/athletes',
-      originalError: error instanceof Error ? error.stack : String(error) 
-    })
+
+    throw new ScrapingError(
+      `Failed to fetch titleholders: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      {
+        url: 'https://www.ufc.com/athletes',
+        originalError: error instanceof Error ? error.stack : String(error)
+      }
+    )
   }
 }
