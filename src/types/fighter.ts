@@ -7,7 +7,7 @@ interface ValuePct {
 
 export interface FighterInfo {
   name: string
-  nickname: string | null
+  nickname: string
   status: 'Active' | 'Retired'
   age: number
   height: number
