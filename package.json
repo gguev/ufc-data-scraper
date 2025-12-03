@@ -1,6 +1,6 @@
 {
   "name": "ufc-data-scraper",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A web scraper that fetches fighters, events, rankings, records, and detailed fight statistics from UFC.com.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
