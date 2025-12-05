@@ -11,7 +11,8 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -39,8 +40,11 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "@types/cheerio": "^0.22.35",
-    "typescript": "^5.9.2"
+    "@biomejs/biome": "^2.3.8",
+    "@types/cheerio": "^1.0.0",
+    "husky": "^9.1.7",
+    "typescript": "^5.9.2",
+    "ultracite": "^6.3.9"
   },
   "bugs": {
     "url": "https://github.com/gguev/ufc-data-scraper/issues"
@@ -48,7 +52,7 @@
   "homepage": "https://github.com/gguev/ufc-data-scraper#readme",
   "dependencies": {
     "cheerio": "^1.1.2",
-    "puppeteer": "^24.29.1",
-    "puppeteer-extra": "^3.3.6"
-  }
+    "puppeteer": "^24.32.0"
+  },
+  "private": true
 }
