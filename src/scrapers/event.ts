@@ -6,7 +6,6 @@ import type { Corner, FightCard } from "../types/event.js";
 import { fetchHtml } from "../utils/fetch.js";
 import { validateSlug } from "../utils/validation.js";
 
-// Regex pattern for odds validation at top level
 const ODDS_REGEX = /^[+-]?\d+$/;
 
 export async function getEvent(slug: string): Promise<FightCard> {
