@@ -1,57 +1,78 @@
-import * as cheerio from 'cheerio'
-import { ScrapingError } from '../errors/index.js'
-import { Titleholders } from '../types/titleholders.js'
-import { fetchHtml } from '../utils/fetch.js'
-import { parseRecord } from './fighter.js'
+import { load } from "cheerio";
+import { ScrapingError } from "../errors/index.js";
+import type { Titleholders } from "../types/titleholders.js";
+import { fetchHtml } from "../utils/fetch.js";
+import { parseRecord } from "./fighter.js";
 
 export async function getTitleholders(): Promise<Titleholders> {
   try {
-    const url = 'https://www.ufc.com/athletes'
-    const html = await fetchHtml(url)
-    const $ = cheerio.load(html)
+    const url = "https://www.ufc.com/athletes";
+    const html = await fetchHtml(url);
+    const $ = load(html);
 
-    const titleholdersDict: Titleholders = {}
+    const titleholdersDict: Titleholders = {};
 
-    $('.l-listing__item').each((i, element) => {
-      const division = $(element).find('.ath-wlcass strong').text().trim().replace(/\s/g, '')
-      const weight = $(element).find('.ath-weight').text().trim()
+    $(".l-listing__item").each((_i, element) => {
+      const division = $(element)
+        .find(".ath-wlcass strong")
+        .text()
+        .trim()
+        .replace(/\s/g, "");
+      // const weight = $(element).find(".ath-weight").text().trim();
       // const champName = $(element).find('.ath-n__name a span').text().trim();
 
-      const champAnchor = $(element).find('.ath-n__name a')
-      const champName = champAnchor.text().trim()
-      const champUrl = new URL(champAnchor.attr('href'), 'https://www.ufc.com').href
+      const champAnchor = $(element).find(".ath-n__name a");
+      const champName = champAnchor.text().trim();
+      const href = champAnchor.attr("href");
+      if (!href) {
+        return;
+      }
 
-      const champNickname = $(element).find('.ath-nn__nickname .field__item').text().trim().replace(/^"|"$/g, '')
-      const champRecord = parseRecord($(element).find('.c-ath--record').text().trim())
-      const champLastFight = $(element).find('.view-fighter-last-fight .view-content .views-row').first().text().trim()
+      const champUrl = new URL(href, "https://www.ufc.com").href;
+
+      const champNickname = $(element)
+        .find(".ath-nn__nickname .field__item")
+        .text()
+        .trim()
+        .replace(/^"|"$/g, "");
+      const champRecord = parseRecord(
+        $(element).find(".c-ath--record").text().trim()
+      );
+      const champLastFight = $(element)
+        .find(".view-fighter-last-fight .view-content .views-row")
+        .first()
+        .text()
+        .trim();
 
       if (division) {
-        titleholdersDict[division.charAt(0).toLowerCase() + division.slice(1).replace(/'/g, '')] = {
+        titleholdersDict[
+          division.charAt(0).toLowerCase() + division.slice(1).replace(/'/g, "")
+        ] = {
           name: champName,
           nickname: champNickname,
-          slug: champUrl.split('/').filter(Boolean).pop() || '',
+          slug: champUrl.split("/").filter(Boolean).pop() || "",
           record: champRecord,
-          lastFight: champLastFight
-        }
+          lastFight: champLastFight,
+        };
       }
-    })
+    });
 
     if (Object.keys(titleholdersDict).length === 0) {
-      throw new ScrapingError('No titleholders found on page', { url })
+      throw new ScrapingError("No titleholders found on page", { url });
     }
 
-    return titleholdersDict
+    return titleholdersDict;
   } catch (error) {
     if (error instanceof ScrapingError) {
-      throw error
+      throw error;
     }
 
     throw new ScrapingError(
-      `Failed to fetch titleholders: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      `Failed to fetch titleholders: ${error instanceof Error ? error.message : "Unknown error"}`,
       {
-        url: 'https://www.ufc.com/athletes',
-        originalError: error instanceof Error ? error.stack : String(error)
+        url: "https://www.ufc.com/athletes",
+        originalError: error instanceof Error ? error.stack : String(error),
       }
-    )
+    );
   }
 }
