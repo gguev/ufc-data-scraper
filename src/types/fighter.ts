@@ -1,72 +1,75 @@
-import { FightRecord } from './common.js'
+import type { FightRecord } from "./common.js";
 
-interface ValuePct {
-  value: number
-  percent: number
-}
+export type Rank = "C" | number | null;
 
-export interface FighterInfo {
-  name: string
-  nickname: string
-  status: 'Active' | 'Retired' | 'Not Fighting'
-  age: number
-  height: number
-  weight: number
-  armReach: number
-  legReach: number
-  fightingStyle: string
-  division: string
-  placeOfBirth: string
-  trainingCamp: string
-  octagonDebut: string
-  imageURL: string
-}
+type ValuePct = {
+  value: number;
+  percent: number;
+};
 
-export interface FighterStats {
-  record: FightRecord
+export type FighterInfo = {
+  name: string;
+  nickname: string;
+  status: "Active" | "Retired" | "Not Fighting";
+  age: number;
+  height: number;
+  weight: number;
+  armReach: number;
+  legReach: number;
+  fightingStyle: string;
+  division: string;
+  rank: Rank;
+  placeOfBirth: string;
+  trainingCamp: string;
+  octagonDebut: string;
+  imageURL: string;
+};
+
+export type FighterStats = {
+  record: FightRecord;
   winByMethod: {
-    ko: ValuePct
-    decision: ValuePct
-    submission: ValuePct
-    firstRoundFinishes: number
-  }
+    ko: ValuePct;
+    decision: ValuePct;
+    submission: ValuePct;
+    firstRoundFinishes: number;
+  };
   strikingAccuracy: {
-    significantStrikesLanded: number
-    significantStrikesAttempted: number
-    significantStrikeLandedPercent: number
-  }
+    significantStrikesLanded: number;
+    significantStrikesAttempted: number;
+    significantStrikeLandedPercent: number;
+  };
   takedownAccuracy: {
-    takedownsLanded: number
-    takedownsAttempted: number
-    takedownsLandedPercent: number
-  }
+    takedownsLanded: number;
+    takedownsAttempted: number;
+    takedownsLandedPercent: number;
+  };
   striking: {
-    significantStrikesLanded: number
-    significantStrikesAbsorbed: number
-    significantStrikesDefense: number
-  }
+    significantStrikesLanded: number;
+    significantStrikesAbsorbed: number;
+    significantStrikesDefense: number;
+  };
   grappling: {
-    takedownAverage: number
-    takedownDefensePercent: number
-    submissionAverage: number
-  }
+    takedownAverage: number;
+    takedownDefensePercent: number;
+    submissionAverage: number;
+  };
   metrics: {
-    knockdownAverage: number
-    averageFightTime: string
-  }
+    knockdownAverage: number;
+    averageFightTime: string;
+  };
   significantStrikeByPosition: {
-    standing: ValuePct
-    clinch: ValuePct
-    ground: ValuePct
-  }
+    standing: ValuePct;
+    clinch: ValuePct;
+    ground: ValuePct;
+  };
   significantStrikeByTarget: {
-    head: ValuePct
-    body: ValuePct
-    leg: ValuePct
-  }
-}
+    head: ValuePct;
+    body: ValuePct;
+    leg: ValuePct;
+  };
+};
 
-export interface Fighter {
-  info: FighterInfo
-  stats: FighterStats
-}
+export type Fighter = {
+  info: FighterInfo;
+  stats: FighterStats;
+};
