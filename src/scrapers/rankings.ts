@@ -1,92 +1,105 @@
-import * as cheerio from 'cheerio'
-import { DECIMAL_RADIX } from '../constants/index.js'
-import { ScrapingError } from '../errors/index.js'
-import { DivisionRanking, RankedFighter, Rankings } from '../types/rankings.js'
-import { fetchHtml } from '../utils/fetch.js'
+import { load } from "cheerio";
+import { DECIMAL_RADIX } from "../constants/index.js";
+import { ScrapingError } from "../errors/index.js";
+import type { DivisionRanking, Rankings } from "../types/rankings.js";
+import { fetchHtml } from "../utils/fetch.js";
 
 const divisionNameMap: Record<string, string> = {
-  "men's pound-for-pound top rank": 'mensPoundForPound',
-  "women's pound-for-pound top rank": 'womensPoundForPound',
-  "men's flyweight": 'flyweight',
-  "men's bantamweight": 'bantamweight',
-  "men's featherweight": 'featherweight',
-  "men's lightweight": 'lightweight',
-  "men's welterweight": 'welterweight',
-  "men's middleweight": 'middleweight',
-  "men's light heavyweight": 'lightHeavyweight',
-  "men's heavyweight": 'heavyweight',
-  "women's strawweight": 'womensStrawweight',
-  "women's flyweight": 'womensFlyweight',
-  "women's bantamweight": 'womensBantamweight',
-  "women's featherweight": 'womensFeatherweight'
-}
+  "men's pound-for-pound top rank": "mensPoundForPound",
+  "women's pound-for-pound top rank": "womensPoundForPound",
+  "men's flyweight": "flyweight",
+  "men's bantamweight": "bantamweight",
+  "men's featherweight": "featherweight",
+  "men's lightweight": "lightweight",
+  "men's welterweight": "welterweight",
+  "men's middleweight": "middleweight",
+  "men's light heavyweight": "lightHeavyweight",
+  "men's heavyweight": "heavyweight",
+  "women's strawweight": "womensStrawweight",
+  "women's flyweight": "womensFlyweight",
+  "women's bantamweight": "womensBantamweight",
+  "women's featherweight": "womensFeatherweight",
+};
 
 function normalizeDivisionName(headerRaw: string): string {
-  const normalized = divisionNameMap[headerRaw.toLowerCase().trim()]
+  const normalized = divisionNameMap[headerRaw.toLowerCase().trim()];
   if (normalized) {
-    return normalized
+    return normalized;
   }
 
   return headerRaw
     .trim()
-    .split(' ')
+    .split(" ")
     .map((word, index) =>
-      index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      index === 0
+        ? word.toLowerCase()
+        : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     )
-    .join('')
+    .join("");
 }
 
 export async function getRankings(): Promise<Rankings> {
   try {
-    const url = 'https://www.ufc.com/rankings'
-    const html = await fetchHtml(url)
-    const $ = cheerio.load(html)
+    const url = "https://www.ufc.com/rankings";
+    const html = await fetchHtml(url);
+    const $ = load(html);
 
-    const rankings: Rankings = {}
-    $('.view-grouping').each((i, element) => {
-      const headerRaw = $(element).find('.view-grouping-header').text().trim()
-      const weightClass = normalizeDivisionName(headerRaw)
+    const rankings: Rankings = {};
+    $(".view-grouping").each((_i: number, element) => {
+      const headerRaw = $(element).find(".view-grouping-header").text().trim();
+      const weightClass = normalizeDivisionName(headerRaw);
 
-      const fighters: DivisionRanking = []
+      const fighters: DivisionRanking = [];
 
       $(element)
-        .find('tbody tr')
-        .each((_, row) => {
-          const rankText = $(row).find('.views-field-weight-class-rank').text().trim()
-          const rank = parseInt(rankText, DECIMAL_RADIX)
+        .find("tbody tr")
+        .each((_: number, row) => {
+          const rankText = $(row)
+            .find(".views-field-weight-class-rank")
+            .text()
+            .trim();
+          const rank = Number.parseInt(rankText, DECIMAL_RADIX);
 
-          const fighterAnchor = $(row).find('.views-field-title a')
-          const fighterName = fighterAnchor.text().trim()
-          const fighterUrl = new URL(fighterAnchor.attr('href'), 'https://www.ufc.com').href
-          const fighterSlug = fighterUrl.split('/').filter(Boolean).pop() || ''
+          const fighterAnchor = $(row).find(".views-field-title a");
+          const fighterName = fighterAnchor.text().trim();
+          const href = fighterAnchor.attr("href");
+          if (!href) {
+            return;
+          }
 
-          if (!isNaN(rank)) {
+          const fighterUrl = new URL(href, "https://www.ufc.com").href;
+          const fighterSlug = fighterUrl.split("/").filter(Boolean).pop() || "";
+
+          if (!Number.isNaN(rank)) {
             fighters.push({
               rank,
               name: fighterName,
-              slug: fighterSlug
-            })
+              slug: fighterSlug,
+            });
           }
-        })
+        });
 
-      fighters.sort((a, b) => a.rank - b.rank)
+      fighters.sort((a, b) => a.rank - b.rank);
 
-      rankings[weightClass] = fighters
-    })
+      rankings[weightClass] = fighters;
+    });
 
     if (Object.keys(rankings).length === 0) {
-      throw new ScrapingError('No ranking data found on the page', { url })
+      throw new ScrapingError("No ranking data found on the page", { url });
     }
 
-    return rankings
+    return rankings;
   } catch (error) {
     if (error instanceof ScrapingError) {
-      throw error
+      throw error;
     }
 
-    throw new ScrapingError(`Failed to fetch rankings: ${error instanceof Error ? error.message : 'Unknown error'}`, {
-      url: 'https://www.ufc.com/rankings',
-      originalError: error instanceof Error ? error.stack : String(error)
-    })
+    throw new ScrapingError(
+      `Failed to fetch rankings: ${error instanceof Error ? error.message : "Unknown error"}`,
+      {
+        url: "https://www.ufc.com/rankings",
+        originalError: error instanceof Error ? error.stack : String(error),
+      }
+    );
   }
 }
