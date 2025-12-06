@@ -2,4 +2,3 @@ node_modules
 dist
 .vscode
 AGENTS.md
-test.js
