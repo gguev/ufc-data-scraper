@@ -11,6 +11,7 @@ export type FighterInfo = {
   name: string;
   nickname: string;
   status: "Active" | "Retired" | "Not Fighting";
+  rank: Rank;
   age: number;
   height: number;
   weight: number;
@@ -18,7 +19,6 @@ export type FighterInfo = {
   legReach: number;
   fightingStyle: string;
   division: string;
-  rank: Rank;
   placeOfBirth: string;
   trainingCamp: string;
   octagonDebut: string;

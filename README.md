@@ -192,6 +192,7 @@ Retrieves a fighter's profile from https://www.ufc.com/athlete/.
     name: 'Petr Yan',
     nickname: 'No Mercy',
     status: 'Active',
+    rank: 'C',
     age: 32,
     height: 67.5,
     weight: 136,
