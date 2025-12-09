@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/gguev/ufc-data-scraper/compare/v1.0.1...v1.0.2) (2025-12-09)
+
+
+### Bug Fixes
+
+* fix cannot find module or type declarations issue ([49d84a9](https://github.com/gguev/ufc-data-scraper/commit/49d84a9f324ba24fc0fe75029cc1bc1687e8459f))
+
 ## [1.0.1](https://github.com/gguev/ufc-data-scraper/compare/v1.0.0...v1.0.1) (2025-12-09)
 
 
