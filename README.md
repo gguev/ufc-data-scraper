@@ -3,6 +3,42 @@
 
 A web scraper that fetches fighters, events, rankings, records, and detailed fight statistics from UFC.com.
 
+## Version Management
+
+This project uses [semantic-release](https://semantic-release.gitbook.io/) for automated versioning and releases. Version numbers are automatically determined based on commit messages following the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+
+### Commit Message Format
+
+When contributing to this project, please follow this format for your commit messages:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+#### Types:
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code (formatting, missing semi-colons, etc.)
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `perf`: A code change that improves performance
+- `test`: Adding missing tests or correcting existing tests
+- `build`: Changes that affect the build system or external dependencies
+- `ci`: Changes to our CI configuration files and scripts
+- `chore`: Other changes that don't modify `src` or `test` files
+- `revert`: Reverts a previous commit
+
+#### Examples:
+```
+feat(scraper): add support for fighter statistics
+fix(parser): handle missing event dates
+docs: update API documentation
+```
+
 ## Usage
 
 ```typescript
