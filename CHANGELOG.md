@@ -1,3 +1,13 @@
+# Changelog
+
+## [1.0.1](https://github.com/gguev/ufc-data-scraper/compare/v1.0.0...v1.0.1) (2025-12-09)
+
+
+### Bug Fixes
+
+* fix imports in fighter scraper ([06cbef8](https://github.com/gguev/ufc-data-scraper/commit/06cbef857488c7f1a525c0b93755799290303f95))
+* move Rank to common types ([da67cb9](https://github.com/gguev/ufc-data-scraper/commit/da67cb99702c4b091a3305dc509f8b18dc01f95f))
+
 # 1.0.0 (2025-12-09)
 
 
