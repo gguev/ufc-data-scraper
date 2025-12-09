@@ -358,6 +358,14 @@ npm install ufc-data-scraper
 
 Guillermo Guevara
 
+## Credit
+
+This project is a fork of [UFC-Scraper](https://github.com/Vladimir-G4/UFC-Scraper) by Vladimir-G4.
+
+## License
+
+MIT
+
 ## Contributing
 
 This project uses [semantic-release](https://semantic-release.gitbook.io/) for automated versioning and releases. Version numbers are automatically determined based on commit messages following the [Conventional Commits](https://www.conventionalcommits.org/) specification.
@@ -393,11 +401,3 @@ feat(scraper): add support for fighter statistics
 fix(parser): handle missing event dates
 docs: update API documentation
 ```
-
-## Credit
-
-This project is a fork of [UFC-Scraper](https://github.com/Vladimir-G4/UFC-Scraper) by Vladimir-G4.
-
-## License
-
-MIT
