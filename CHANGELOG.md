@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/gguev/ufc-data-scraper/compare/v1.2.0...v1.2.1) (2025-12-09)
+
+
+### Bug Fixes
+
+* update README ([8bd2a72](https://github.com/gguev/ufc-data-scraper/commit/8bd2a72a58b5195a6e8675b5501d02db524103e0))
+
 # [1.2.0](https://github.com/gguev/ufc-data-scraper/compare/v1.1.0...v1.2.0) (2025-12-09)
 
 
