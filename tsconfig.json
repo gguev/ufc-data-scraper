@@ -5,6 +5,7 @@
     "module": "Preserve",
     "moduleDetection": "force",
     "declaration": true,
+    "emitDeclarationOnly": false,
     "outDir": "dist",
     "jsx": "react-jsx",
     "allowJs": true,

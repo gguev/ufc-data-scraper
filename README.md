@@ -3,10 +3,22 @@
 
 A web scraper that fetches fighters, events, rankings, records, and detailed fight statistics from UFC.com.
 
+## Installation
+
+```bash
+npm install ufc-data-scraper
+```
+
 ## Usage
 
 ```typescript
-import { getEvent, getFighter, getRankings } from 'ufc-data-scraper'
+// Import specific scrapers
+import { getEvent } from 'ufc-data-scraper/scrapers/event'
+import { getFighter } from 'ufc-data-scraper/scrapers/fighter'
+import { getRankings } from 'ufc-data-scraper/scrapers/rankings'
+
+// Import types if needed
+import type { FightCard, Fighter, Rankings } from 'ufc-data-scraper/types'
 
 // Get UFC event fights
 const event = await getEvent('ufc-321')
@@ -348,11 +360,6 @@ Retrieves current UFC titleholders for each division from https://www.ufc.com/at
 }
 ```
 
-## Installation
-
-```bash
-npm install ufc-data-scraper
-```
 
 ## Author
 

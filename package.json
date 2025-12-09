@@ -38,6 +38,16 @@
     "README.md",
     "LICENSE"
   ],
+  "exports": {
+    "./scrapers/*": {
+      "types": "./dist/src/scrapers/*.d.ts",
+      "default": "./dist/src/scrapers/*.js"
+    },
+    "./types/*": {
+      "types": "./dist/src/types/*.d.ts",
+      "default": "./dist/src/types/*.js"
+    }
+  },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
     "@semantic-release/changelog": "^6.0.3",
