@@ -1,7 +1,8 @@
 import { type CheerioAPI, load } from "cheerio";
 import { PERCENT_MULTIPLIER, TO_FIXED_DECIMALS } from "../constants/index.js";
 import { ScrapingError, ValidationError } from "../errors/index.js";
-import type { Fighter, Rank } from "../types/fighter.js";
+import type { Rank } from "../types/common.js";
+import type { Fighter } from "../types/fighter.js";
 import { fetchHtml } from "../utils/fetch.js";
 import { validateSlug } from "../utils/validation.js";
 
