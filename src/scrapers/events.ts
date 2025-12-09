@@ -71,7 +71,7 @@ function parseEventCards(
   const events: Event[] = [];
 
   $(`${cssSelector} .c-card-event--result`).each(
-    // biome-ignore lint/suspicious/noExplicitAny: Cheerio element types are complex
+    // biome-ignore lint/suspicious/noExplicitAny: Cheerio types are complex
     (_: number, card: any) => {
       const $card = $(card);
       const headlineText = $card
