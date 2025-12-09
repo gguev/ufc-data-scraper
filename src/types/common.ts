@@ -1,4 +1,5 @@
 // Common types shared across the UFC scraper
+export type Rank = "C" | number | null;
 
 export type FightRecord = {
   wins: number;

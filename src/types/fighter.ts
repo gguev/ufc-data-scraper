@@ -1,6 +1,4 @@
-import type { FightRecord } from "./common.js";
-
-export type Rank = "C" | number | null;
+import type { FightRecord, Rank } from "./common.js";
 
 type ValuePct = {
   value: number;
