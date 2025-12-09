@@ -4,7 +4,7 @@ import { NetworkError } from "../errors/index.js";
 const MS_TO_S = 1000;
 const BROWSER_TIMEOUT = 5000;
 const EXPONENTIAL_BACKOFF_BASE = 2;
-export const REQUEST_DELAY = 15_000; // 15 seconds - UFC site delay
+export const REQUEST_DELAY = 15_000; // UFC site delay
 
 let lastRequestTime = 0;
 
