@@ -17,9 +17,6 @@ import { getEvent } from 'ufc-data-scraper/scrapers/event'
 import { getFighter } from 'ufc-data-scraper/scrapers/fighter'
 import { getRankings } from 'ufc-data-scraper/scrapers/rankings'
 
-// Import types if needed
-import type { FightCard, Fighter, Rankings } from 'ufc-data-scraper/types'
-
 // Get UFC event fights
 const event = await getEvent('ufc-321')
 console.log(event[0].red.name) // "Tom Aspinall"
