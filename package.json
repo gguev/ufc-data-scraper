@@ -60,5 +60,6 @@
     "cheerio": "^1.1.2",
     "puppeteer": "^24.32.0"
   },
-  "private": false
+  "private": false,
+  "version": "1.0.0"
 }
