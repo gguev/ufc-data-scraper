@@ -18,7 +18,7 @@ jobs:
       - name: Run linting
         run: bunx ultracite check
       - name: Run tests
-        run: bun test
+        run: bun run test
       - name: Build project
         run: bun run build
       - name: Release
