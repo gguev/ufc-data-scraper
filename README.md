@@ -12,21 +12,17 @@ npm install ufc-data-scraper
 ## Usage
 
 ```typescript
-// Import specific scrapers
 import { getEvent } from 'ufc-data-scraper/scrapers/event'
 import { getFighter } from 'ufc-data-scraper/scrapers/fighter'
 import { getRankings } from 'ufc-data-scraper/scrapers/rankings'
 
-// Get UFC event fights
 const event = await getEvent('ufc-321')
 console.log(event[0].red.name) // "Tom Aspinall"
 
-// Get fighter details
 const fighter = await getFighter('petr-yan')
 console.log(fighter.info.name) // "Petr Yan"
 console.log(fighter.stats.record) // { wins: 19, losses: 5, draws: 0 }
 
-// Get current rankings
 const rankings = await getRankings()
 console.log(rankings.mensPoundForPound[0]) // { rank: 1, name: "Islam Makhachev", slug: "islam-makhachev" }
 ```
