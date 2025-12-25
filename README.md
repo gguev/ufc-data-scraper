@@ -267,7 +267,7 @@ Retrieves the past 3 fights of a fighter's history from https://www.ufc.com/athl
   {
     fightId: 12182,
     event: { name: 'UFC 317', slug: 'ufc-317', date: '2025-06-28' },
-    red: { name: '', slug: 'brandon-royval', result: 'loss' },
+    red: { name: 'Brandon Royval', slug: 'brandon-royval', result: 'loss' },
     blue: { name: 'Joshua Van', slug: 'joshua-van', result: 'win' },
     result: { method: 'Decision - Unanimous', round: 3, time: '5:00' },
   },
