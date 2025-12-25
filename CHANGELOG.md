@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/gguev/ufc-data-scraper/compare/v1.2.1...v1.2.2) (2025-12-25)
+
+
+### Bug Fixes
+
+* add missing name in code example ([6059c9e](https://github.com/gguev/ufc-data-scraper/commit/6059c9e90b15a2154b987e296a823fde4270519c))
+
 ## [1.2.1](https://github.com/gguev/ufc-data-scraper/compare/v1.2.0...v1.2.1) (2025-12-09)
 
 
